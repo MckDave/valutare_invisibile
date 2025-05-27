@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Valutazione Digitale - Valutare l'Invisibile</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0;
+            min-height: 600px;
+        }
+        
+        .sidebar {
+            background: #f8f9fa;
+            padding: 30px;
+            border-right: 1px solid #e9ecef;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .student-selector {
+            margin-bottom: 30px;
+        }
+        
+        .student-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .student-selector input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .competenza-section {
+            margin-bottom: 30px;
+        }
+        
+        .competenza-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .competenza-item {
+            margin-bottom: 20px;
+        }
+        
+        .competenza-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #34495e;
+        }
+        
+        .range-input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .range-value {
+            text-align: center;
+            font-weight: bold;
+            color: #3498db;
+            font-size: 14px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-full {
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .chart-card h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .progress-summary {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-summary h4 {
+            color: #2980b9;
+            margin-bottom: 15px;
+        }
+        
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .progress-bar {
+            width: 60px;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .level-iniziale { background: #e74c3c; }
+        .level-base { background: #f39c12; }
+        .level-intermedio { background: #f1c40f; }
+        .level-avanzato { background: #27ae60; }
+        
+        .observations {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .observations h4 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .observations textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .export-section {
+            background: #d1ecf1;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .export-section h4 {
+            color: #0c5460;
+            margin-bottom: 15px;
+        }
+        
+        .btn-export {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Sistema Valutazione Digitale</h1>
+            <p>"Valutare l'Invisibile" - Monitoraggio Competenze Trasversali</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="student-selector">
+                    <label for="studentName">Nome Studente:</label>
+                    <input type="text" id="studentName" placeholder="Inserisci nome studente" value="Marco Rossi">
+                </div>
+                
+                <div class="competenza-section">
+                    <h3>🤝 Collaborazione</h3>
+                    <div class="competenza-item">
+                        <label>Partecipazione al gruppo:</label>
+                        <input type="range" min="1" max="4" value="2" class="range-input" id="collab1">
+                        <div class="range-value" id="collab1-value">Base</div>
+                    </div>
+                    <div class="competenza-item">
+                        <label>Comunicazione:</label>
+                        <input type="range" min="1" max="4" value="3" class="range-input" id="collab2">
+                        <div class="range-value" id="collab2-value">Intermedio</div>
+                    </div>
+                </div>
+                
+                <div class="competenza-section">
+                    <h3>🎯 Autonomia</h3>
+                    <div class="competenza-item">
+                        <label>Organizzazione lavoro:</label>
+                        <input type="range" min="1" max="4" value="2" class="range-input" id="auto1">
+                        <div class="range-value" id="auto1-value">Base</div>
+                    </div>
+                    <div class="competenza-item">
+                        <label>Gestione difficoltà:</label>
+                        <input type="range" min="1" max="4" value="3" class="range-input" id="auto2">
+                        <div class="range-value" id="auto2-value">Intermedio</div>
+                    </div>
+                </div>
+                
+                <div class="competenza-section">
+                    <h3>💪 Resilienza</h3>
+                    <div class="competenza-item">
+                        <label>Gestione errori:</label>
+                        <input type="range" min="1" max="4" value="2" class="range-input" id="resil1">
+                        <div class="range-value" id="resil1-value">Base</div>
+                    </div>
+                    <div class="competenza-item">
+                        <label>Persistenza:</label>
+                        <input type="range" min="1" max="4" value="3" class="range-input" id="resil2">
+                        <div class="range-value" id="resil2-value">Intermedio</div>
+                    </div>
+                </div>
+                
+                <div class="competenza-section">
+                    <h3>🧠 Metacognizione</h3>
+                    <div class="competenza-item">
+                        <label>Consapevolezza:</label>
+                        <input type="range" min="1" max="4" value="2" class="range-input" id="meta1">
+                        <div class="range-value" id="meta1-value">Base</div>
+                    </div>
+                    <div class="competenza-item">
+                        <label>Autovalutazione:</label>
+                        <input type="range" min="1" max="4" value="2" class="range-input" id="meta2">
+                        <div class="range-value" id="meta2-value">Base</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-full" onclick="updateCharts()">
+                    📈 Aggiorna Visualizzazioni
+                </button>
+            </div>
+            
+            <div class="content">
+                <div class="progress-summary">
+                    <h4>📊 Riepilogo Progressi - <span id="studentDisplayName">Marco Rossi</span></h4>
+                    <div class="progress-item">
+                        <span>Collaborazione:</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill level-base" id="collab-progress" style="width: 62.5%"></div>
+                        </div>
+                        <span id="collab-avg">2.5/4</span>
+                    </div>
+                    <div class="progress-item">
+                        <span>Autonomia:</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill level-base" id="auto-progress" style="width: 62.5%"></div>
+                        </div>
+                        <span id="auto-avg">2.5/4</span>
+                    </div>
+                    <div class="progress-item">
+                        <span>Resilienza:</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill level-base" id="resil-progress" style="width: 62.5%"></div>
+                        </div>
+                        <span id="resil-avg">2.5/4</span>
+                    </div>
+                    <div class="progress-item">
+                        <span>Metacognizione:</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="meta-progress" style="width: 50%"></div>
+                        </div>
+                        <span id="meta-avg">2.0/4</span>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h4>Radar delle Competenze</h4>
+                        <canvas id="radarChart" width="300" height="300"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h4>Andamento Temporale</h4>
+                        <canvas id="lineChart" width="300" height="300"></canvas>
+                    </div>
+                </div>
+                
+                <div class="observations">
+                    <h4>📝 Osservazioni e Note</h4>
+                    <textarea id="observations" placeholder="Inserisci qui osservazioni specifiche, episodi significativi, strategie efficaci...">Marco mostra progressi costanti nella collaborazione. Particolarmente efficace il lavoro in coppia. Da potenziare l'autovalutazione con domande guida specifiche.</textarea>
+                    <div class="timestamp">Ultimo aggiornamento: <span id="lastUpdate">15/12/2024 - 14:30</span></div>
+                </div>
+                
+                <div class="export-section">
+                    <h4>📤 Esportazione Dati</h4>
+                    <button class="btn btn-export" onclick="exportData()">
+                        💾 Esporta Report Completo
+                    </button>
+                    <button class="btn btn-export" onclick="printReport()" style="margin-left: 10px;">
+                        🖨️ Stampa Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurazione livelli
+        const levels = ['Iniziale', 'Base', 'Intermedio', 'Avanzato'];
+        const levelColors = {
+            1: '#e74c3c',
+            2: '#f39c12', 
+            3: '#f1c40f',
+            4: '#27ae60'
+        };
+        
+        // Dati storici simulati per il grafico temporale
+        const historicalData = {
+            labels: ['Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
+            collaborazione: [1.5, 2.0, 2.3, 2.5],
+            autonomia: [2.0, 2.2, 2.4, 2.5],
+            resilienza: [1.8, 2.1, 2.3, 2.5],
+            metacognizione: [1.5, 1.7, 1.9, 2.0]
+        };
+        
+        let radarChart, lineChart;
+        
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSliders();
+            initializeCharts();
+            updateDisplays();
+        });
+        
+        function initializeSliders() {
+            const sliders = document.querySelectorAll('.range-input');
+            sliders.forEach(slider => {
+                slider.addEventListener('input', function() {
+                    updateSliderDisplay(this);
+                    updateDisplays();
+                });
+                updateSliderDisplay(slider);
+            });
+        }
+        
+        function updateSliderDisplay(slider) {
+            const value = parseInt(slider.value);
+            const displayElement = document.getElementById(slider.id + '-value');
+            displayElement.textContent = levels[value - 1];
+            displayElement.style.color = levelColors[value];
+        }
+        
+        function updateDisplays() {
+            // Aggiorna nome studente
+            const studentName = document.getElementById('studentName').value || 'Studente';
+            document.getElementById('studentDisplayName').textContent = studentName;
+            
+            // Calcola medie per competenza
+            const collab = (parseInt(document.getElementById('collab1').value) + parseInt(document.getElementById('collab2').value)) / 2;
+            const auto = (parseInt(document.getElementById('auto1').value) + parseInt(document.getElementById('auto2').value)) / 2;
+            const resil = (parseInt(document.getElementById('resil1').value) + parseInt(document.getElementById('resil2').value)) / 2;
+            const meta = (parseInt(document.getElementById('meta1').value) + parseInt(document.getElementById('meta2').value)) / 2;
+            
+            // Aggiorna progress bars
+            updateProgressBar('collab', collab);
+            updateProgressBar('auto', auto);
+            updateProgressBar('resil', resil);
+            updateProgressBar('meta', meta);
+        }
+        
+        function updateProgressBar(competenza, value) {
+            const progressElement = document.getElementById(competenza + '-progress');
+            const avgElement = document.getElementById(competenza + '-avg');
+            
+            const percentage = (value / 4) * 100;
+            progressElement.style.width = percentage + '%';
+            
+            // Aggiorna colore
+            progressElement.className = 'progress-fill level-' + getLevelClass(value);
+            
+            avgElement.textContent = value.toFixed(1) + '/4';
+        }
+        
+        function getLevelClass(value) {
+            if (value < 1.5) return 'iniziale';
+            if (value < 2.5) return 'base';
+            if (value < 3.5) return 'intermedio';
+            return 'avanzato';
+        }
+        
+        function initializeCharts() {
+            // Radar Chart
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Collaborazione', 'Autonomia', 'Resilienza', 'Metacognizione'],
+                    datasets: [{
+                        label: 'Livello Attuale',
+                        data: [2.5, 2.5, 2.5, 2.0],
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: '#3498db',
+                        pointBackgroundColor: '#3498db',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#3498db'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 4,
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    return levels[value - 1] || '';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Line Chart
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            lineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: historicalData.labels,
+                    datasets: [
+                        {
+                            label: 'Collaborazione',
+                            data: historicalData.collaborazione,
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Autonomia',
+                            data: historicalData.autonomia,
+                            borderColor: '#f39c12',
+                            backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Resilienza',
+                            data: historicalData.resilienza,
+                            borderColor: '#27ae60',
+                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Metacognizione',
+                            data: historicalData.metacognizione,
+                            borderColor: '#9b59b6',
+                            backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 4,
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    return levels[value - 1] || '';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateCharts() {
+            // Raccoglie i dati attuali
+            const collab = (parseInt(document.getElementById('collab1').value) + parseInt(document.getElementById('collab2').value)) / 2;
+            const auto = (parseInt(document.getElementById('auto1').value) + parseInt(document.getElementById('auto2').value)) / 2;
+            const resil = (parseInt(document.getElementById('resil1').value) + parseInt(document.getElementById('resil2').value)) / 2;
+            const meta = (parseInt(document.getElementById('meta1').value) + parseInt(document.getElementById('meta2').value)) / 2;
+            
+            // Aggiorna radar chart
+            radarChart.data.datasets[0].data = [collab, auto, resil, meta];
+            radarChart.update();
+            
+            // Aggiorna dati storici (simula aggiunta nuovo dato)
+            const currentMonth = 'Dicembre';
+            const lastIndex = historicalData.labels.length - 1;
+            historicalData.collaborazione[lastIndex] = collab;
+            historicalData.autonomia[lastIndex] = auto;
+            historicalData.resilienza[lastIndex] = resil;
+            historicalData.metacognizione[lastIndex] = meta;
+            
+            // Aggiorna line chart
+            lineChart.data.datasets[0].data = historicalData.collaborazione;
+            lineChart.data.datasets[1].data = historicalData.autonomia;
+            lineChart.data.datasets[2].data = historicalData.resilienza;
+            lineChart.data.datasets[3].data = historicalData.metacognizione;
+            lineChart.update();
+            
+            // Aggiorna timestamp
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('it-IT');
+        }
+        
+        function exportData() {
+            const studentName = document.getElementById('studentName').value || 'Studente';
+            const observations = document.getElementById('observations').value;
+            
+            const collab = (parseInt(document.getElementById('collab1').value) + parseInt(document.getElementById('collab2').value)) / 2;
+            const auto = (parseInt(document.getElementById('auto1').value) + parseInt(document.getElementById('auto2').value)) / 2;
+            const resil = (parseInt(document.getElementById('resil1').value) + parseInt(document.getElementById('resil2').value)) / 2;
+            const meta = (parseInt(document.getElementById('meta1').value) + parseInt(document.getElementById('meta2').value)) / 2;
+            
+            const reportData = {
+                studente: studentName,
+                data: new Date().toLocaleDateString('it-IT'),
+                competenze: {
+                    collaborazione: collab.toFixed(1),
+                    autonomia: auto.toFixed(1),
+                    resilienza: resil.toFixed(1),
+                    metacognizione: meta.toFixed(1)
+                },
+                osservazioni: observations,
+                datiStorici: historicalData
+            };
+            
+            const dataStr = JSON.stringify(reportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `report_${studentName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+        
+        function printReport() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
