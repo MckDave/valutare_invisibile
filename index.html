@@ -2560,6 +2560,49 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                 showDebugPanel();
             }
         });
-    </script>
+
+        }; // ← Fine di window.onload
+
+    // ========== INIZIO NUOVE FUNZIONI QUI ==========
+    
+    // Funzione per toggle ausili sensoriali
+    function toggleAusilio(button) {
+        const isSelected = button.style.background !== 'rgb(255, 255, 255)';
+        
+        if (isSelected) {
+            // Deseleziona
+            button.style.background = '#fff';
+        } else {
+            // Seleziona con colore appropriato basato sul border
+            const borderColor = button.style.borderColor;
+            if (borderColor === 'rgb(40, 167, 69)') {          // verde
+                button.style.background = '#d4edda';
+            } else if (borderColor === 'rgb(243, 156, 18)') {   // arancione
+                button.style.background = '#fff3cd';
+            } else if (borderColor === 'rgb(23, 162, 184)') {   // blu
+                button.style.background = '#d1ecf1';
+            } else if (borderColor === 'rgb(111, 66, 193)') {   // viola
+                button.style.background = '#e2d9f3';
+            } else if (borderColor === 'rgb(232, 62, 140)') {   // rosa
+                button.style.background = '#f8d7e9';
+            }
+        }
+    }
+
+    // Funzione per toggle strumenti efficaci DSA
+    function toggleStrumentoEfficace(button) {
+        const isSelected = button.style.background !== 'rgb(255, 255, 255)';
+        
+        if (isSelected) {
+            button.style.background = '#fff';
+        } else {
+            button.style.background = '#d4edda';
+        }
+    }
+    
+    // ========== FINE NUOVE FUNZIONI ==========
+
+</script> <!-- ← Tag di chiusura dello script principale -->
+
 </body>
 </html>
