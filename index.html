@@ -6,9 +6,10 @@
 ║  Autore: Mirella Colangelo                                       ║
 ║  Istituzione: DigitalCrazyCompany                                ║
 ║  Anno: 2025                                                      ║             
-║  Sistema di valutazione inclusiva per studenti con disabilità    ║
-║  ispirato ai principi di Black & Wiliam per la valutazione       ║
-║  formativa e progettato secondo i principi UDL.                  ║
+║  Sistema di valutazione inclusiva per studenti disturbi specifici║
+║  dell'apprendimento e con disalilità ispirato ai principi di     ║
+║  Black & Wiliam per la valutazione formativa e progettato        ║
+║  secondo i principi UDL.                                         ║
 ║                                                                  ║
 ║  Licenza: Creative Commons BY-NC-SA 4.0                          ║
 ║  Repository: https://github.com/MckDave/valutare-invisibile║     ║   
@@ -17,6 +18,7 @@
 ║  Mirella Colangelo (2025)                                        ║
 ║  Sistema Valutativo "Valutare l'Invisibile"                      ║
 ║  https://github.com/MckDave/valutare_invisibile                  ║
+║  email: mir[at]digitalcrazycompany.it                            ║
 ╚══════════════════════════════════════════════════════════════════╝
 -->
 <html lang="it">
@@ -1508,16 +1510,17 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                     <div class="portfolio-item">
                         <label>Ausili utilizzati:</label>
                         <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
-                            <span style="padding: 5px 10px; background: #d4edda; border-radius: 15px;">🖥️ Screen reader</span>
-                            <span style="padding: 5px 10px; background: #d4edda; border-radius: 15px;">🔍 Lente ingrandimento</span>
-                            <span style="padding: 5px 10px; background: #fff3cd; border-radius: 15px;">🎧 Amplificatori audio</span>
-                            <span style="padding: 5px 10px; background: #d1ecf1; border-radius: 15px;">⌨️ Tastiera Braille</span>
-                        </div>
+    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #d4edda; border: 2px solid #28a745; border-radius: 15px; cursor: pointer;">🖥️ Screen reader</button>
+    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff; border: 2px solid #28a745; border-radius: 15px; cursor: pointer;">🔍 Lente ingrandimento</button>
+    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff3cd; border: 2px solid #f39c12; border-radius: 15px; cursor: pointer;">🎧 Amplificatori audio</button>
+    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff; border: 2px solid #17a2b8; border-radius: 15px; cursor: pointer;">⌨️ Tastiera Braille</button>
+</div>
                         
-                        <label>Note sull'efficacia degli ausili:</label>
-                        <textarea placeholder="Descrivi l'efficacia degli ausili utilizzati...">Lo screen reader permette piena autonomia nella lettura. La lente di ingrandimento facilita il lavoro sui dettagli dei grafici matematici.</textarea>
-                    </div>
-                </div>
+                       <!-- AREA COMMENTI: -->
+<div style="margin-top: 15px;">
+    <label><strong>💬 Commenti sugli ausili selezionati:</strong></label>
+    <textarea id="ausili-comments" placeholder="Descrivi l'efficacia degli ausili selezionati, eventuali difficoltà, miglioramenti osservati..." style="width: 100%; height: 80px; margin-top: 10px;"></textarea>
+</div>
             `;
         }
         
