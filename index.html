@@ -2554,21 +2554,19 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
             document.body.insertAdjacentHTML('beforeend', debugPanel);
         }
 
-         // Shortcut per sviluppatori (Ctrl+Shift+D)
+        // Shortcut per sviluppatori (Ctrl+Shift+D)
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.shiftKey && e.key === 'D') {
                 showDebugPanel();
             }
         });
 
-    };
+    }; // ← Fine di window.onload
 
     function testFunction() {
         console.log("Test funziona!");
     }
 
-</script>
-; // ← Fine di window.onload
-       </script> <!-- ← Fine script principale -->
+</script> <!-- ← UN SOLO tag di chiusura script -->
 </body>
 </html>
