@@ -2560,11 +2560,40 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                 showDebugPanel();
             }
         });
-
-    function testFunction() {
-        console.log("Test funziona!");
+        
+// Funzione per toggle ausili sensoriali
+    function toggleAusilio(button) {
+        const isSelected = button.style.background !== 'rgb(255, 255, 255)';
+        
+        if (isSelected) {
+            button.style.background = '#fff';
+        } else {
+            const borderColor = button.style.borderColor;
+            if (borderColor === 'rgb(40, 167, 69)') {
+                button.style.background = '#d4edda';
+            } else if (borderColor === 'rgb(243, 156, 18)') {
+                button.style.background = '#fff3cd';
+            } else if (borderColor === 'rgb(23, 162, 184)') {
+                button.style.background = '#d1ecf1';
+            } else if (borderColor === 'rgb(111, 66, 193)') {
+                button.style.background = '#e2d9f3';
+            } else if (borderColor === 'rgb(232, 62, 140)') {
+                button.style.background = '#f8d7e9';
+            }
+        }
     }
 
+    // Funzione per toggle strumenti efficaci DSA
+    function toggleStrumentoEfficace(button) {
+        const isSelected = button.style.background !== 'rgb(255, 255, 255)';
+        
+        if (isSelected) {
+            button.style.background = '#fff';
+        } else {
+            button.style.background = '#d4edda';
+        }
+    }
+    
 </script>
 </body>
 </html>
