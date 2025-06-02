@@ -1759,7 +1759,10 @@
         
         function initializeApp() {
             // Imposta data corrente
-            document.getElementById('currentDate').value = new Date().toISOString().split('T')[0];
+            const currentDateEl = document.getElementById('currentDate');
+            if (currentDateEl) {
+                currentDateEl.value = new Date().toISOString().split('T')[0];
+            }
             
             // Inizializza sliders
             initializeSliders();
@@ -1831,7 +1834,12 @@
             const targetTab = document.getElementById('tab-' + tabName);
             if (targetTab) {
                 targetTab.classList.add('active');
-                event.target.classList.add('active');
+                
+                // Trova il bottone cliccato
+                const activeButton = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
                 
                 // Se è dashboard, aggiorna i grafici
                 if (tabName === 'dashboard') {
@@ -1841,35 +1849,38 @@
         }
         
         function updateDisabilitySection() {
-            const disabilityType = document.getElementById('disabilityType').value;
-            const content = document.getElementById('disability-content');
-            const title = document.getElementById('specialized-title');
+            const disabilityTypeEl = document.getElementById('disabilityType');
+            const contentEl = document.getElementById('disability-content');
+            const titleEl = document.getElementById('specialized-title');
             
+            if (!disabilityTypeEl || !contentEl || !titleEl) return;
+            
+            const disabilityType = disabilityTypeEl.value;
             let html = '';
             
             switch(disabilityType) {
                 case 'intellettiva':
-                    title.textContent = '🎯 Disabilità Intellettive - Scale di Micro-progressi';
+                    titleEl.textContent = '🎯 Disabilità Intellettive - Scale di Micro-progressi';
                     html = generateIntellectualDisabilityContent();
                     break;
                 case 'autismo':
-                    title.textContent = '🎯 Disturbi dello Spettro Autistico';
+                    titleEl.textContent = '🎯 Disturbi dello Spettro Autistico';
                     html = generateAutismContent();
                     break;
                 case 'dsa':
-                    title.textContent = '🎯 DSA - Disturbi Specifici dell\'Apprendimento';
+                    titleEl.textContent = '🎯 DSA - Disturbi Specifici dell\'Apprendimento';
                     html = generateDSAContent();
                     break;
                 case 'sensoriale':
-                    title.textContent = '🎯 Disabilità Sensoriali';
+                    titleEl.textContent = '🎯 Disabilità Sensoriali';
                     html = generateSensorialContent();
                     break;
                 default:
-                    title.textContent = '🎯 Valutazioni Specializzate';
+                    titleEl.textContent = '🎯 Valutazioni Specializzate';
                     html = '<p>Seleziona una tipologia di disabilità per visualizzare gli strumenti specifici.</p>';
             }
             
-            content.innerHTML = html;
+            contentEl.innerHTML = html;
         }
         
         function generateIntellectualDisabilityContent() {
@@ -1920,31 +1931,6 @@
                             <div class="progress-phase" onclick="selectPhase(this)">
                                 <h5>Fase 4 - Autonoma</h5>
                                 <p>Chiede aiuto appropriato in contesti diversi, valutando quando è necessario</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="disability-specific">
-                    <h4>🎯 Autonomia Funzionale Progressiva</h4>
-                    <div style="margin-bottom: 25px;">
-                        <label><strong>🧼 Autonomia Personale - Cura di sé:</strong></label>
-                        <div class="micro-progress">
-                            <div class="progress-phase" onclick="selectPhase(this)">
-                                <h5>Fase 1 - Dipendente</h5>
-                                <p>Necessita di assistenza completa, partecipa passivamente</p>
-                            </div>
-                            <div class="progress-phase selected" onclick="selectPhase(this)">
-                                <h5>Fase 2 - Collaborativa</h5>
-                                <p>Collabora attivamente in sequenze familiari con guida costante</p>
-                            </div>
-                            <div class="progress-phase" onclick="selectPhase(this)">
-                                <h5>Fase 3 - Guidata</h5>
-                                <p>Gestisce routine con supervisione e prompts occasionali</p>
-                            </div>
-                            <div class="progress-phase" onclick="selectPhase(this)">
-                                <h5>Fase 4 - Indipendente</h5>
-                                <p>Gestisce autonomamente routine in contesti diversi</p>
                             </div>
                         </div>
                     </div>
@@ -2013,78 +1999,72 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="disability-specific">
-                    <h4>🛠️ Monitoraggio Strumenti Compensativi</h4>
-                    <div class="portfolio-item">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div>
-                                <label><strong>🔊 Sintesi vocale:</strong></label>
-                                <select style="width: 100%; padding: 8px; margin-bottom: 10px;" onchange="updateCompensativeToolReport()">
-                                    <option>Non utilizzata</option>
-                                    <option>Utilizzata occasionalmente</option>
-                                    <option selected>Utilizzata regolarmente</option>
-                                    <option>Utilizzata sistematicamente</option>
-                                </select>
-                                <textarea placeholder="Impatto osservato..." style="height: 60px;">Significativo miglioramento nella comprensione dei testi lunghi. Riduzione dell'affaticamento visivo durante lo studio.</textarea>
-                                
-                                <label><strong>💻 Software con correttore:</strong></label>
-                                <select style="width: 100%; padding: 8px; margin-bottom: 10px;">
-                                    <option>Non utilizzato</option>
-                                    <option>Utilizzato occasionalmente</option>
-                                    <option selected>Utilizzato regolarmente</option>
-                                    <option>Utilizzato sistematicamente</option>
-                                </select>
-                                <textarea placeholder="Benefici osservati..." style="height: 60px;">Maggiore autonomia nella produzione scritta. Aumento della qualità dei contenuti grazie alla riduzione dell'ansia da errore.</textarea>
-                            </div>
-                            <div>
-                                <label><strong>📚 Mappe concettuali digitali:</strong></label>
-                                <select style="width: 100%; padding: 8px; margin-bottom: 10px;">
-                                    <option>Non utilizzate</option>
-                                    <option selected>Utilizzate occasionalmente</option>
-                                    <option>Utilizzate regolarmente</option>
-                                    <option>Utilizzate sistematicamente</option>
-                                </select>
-                                <textarea placeholder="Efficacia nell'apprendimento..." style="height: 60px;">Facilitano l'organizzazione delle idee e lo studio. Particolarmente utili per le materie di studio.</textarea>
-                                
-                                <label><strong>🎧 Registrazioni audio lezioni:</strong></label>
-                                <select style="width: 100%; padding: 8px; margin-bottom: 10px;">
-                                    <option>Non utilizzate</option>
-                                    <option>Utilizzate occasionalmente</option>
-                                    <option selected>Utilizzate regolarmente</option>
-                                    <option>Utilizzate sistematicamente</option>
-                                </select>
-                                <textarea placeholder="Supporto all'apprendimento..." style="height: 60px;">Permettono il recupero di informazioni perse durante la spiegazione. Utili per il consolidamento a casa.</textarea>
+                    
+                    <div class="disability-specific">
+                        <h4>🛠️ Monitoraggio Strumenti Compensativi</h4>
+                        <div class="portfolio-item">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div>
+                                    <label><strong>🔊 Sintesi vocale:</strong></label>
+                                    <select style="width: 100%; padding: 8px; margin-bottom: 10px;" onchange="updateCompensativeToolReport()">
+                                        <option>Non utilizzata</option>
+                                        <option>Utilizzata occasionalmente</option>
+                                        <option selected>Utilizzata regolarmente</option>
+                                        <option>Utilizzata sistematicamente</option>
+                                    </select>
+                                    <textarea placeholder="Impatto osservato..." style="height: 60px; width: 100%;">Significativo miglioramento nella comprensione dei testi lunghi.</textarea>
+                                    
+                                    <label><strong>💻 Software con correttore:</strong></label>
+                                    <select style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                                        <option>Non utilizzato</option>
+                                        <option>Utilizzato occasionalmente</option>
+                                        <option selected>Utilizzato regolarmente</option>
+                                        <option>Utilizzato sistematicamente</option>
+                                    </select>
+                                    <textarea placeholder="Benefici osservati..." style="height: 60px; width: 100%;">Maggiore autonomia nella produzione scritta.</textarea>
+                                </div>
+                                <div>
+                                    <label><strong>📚 Mappe concettuali digitali:</strong></label>
+                                    <select style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                                        <option>Non utilizzate</option>
+                                        <option selected>Utilizzate occasionalmente</option>
+                                        <option>Utilizzate regolarmente</option>
+                                        <option>Utilizzate sistematicamente</option>
+                                    </select>
+                                    <textarea placeholder="Efficacia nell'apprendimento..." style="height: 60px; width: 100%;">Facilitano l'organizzazione delle idee.</textarea>
+                                    
+                                    <label><strong>🎧 Registrazioni audio lezioni:</strong></label>
+                                    <select style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                                        <option>Non utilizzate</option>
+                                        <option>Utilizzate occasionalmente</option>
+                                        <option selected>Utilizzate regolarmente</option>
+                                        <option>Utilizzate sistematicamente</option>
+                                    </select>
+                                    <textarea placeholder="Supporto all'apprendimento..." style="height: 60px; width: 100%;">Permettono il recupero di informazioni perse.</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="disability-specific">
-                    <h4>📊 Valutazione delle Strategie Apprese</h4>
-                    <div class="portfolio-item">
-                        <label><strong>🎯 Strategie di lettura sviluppate:</strong></label>
-                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #d1ecf1;">Pre-lettura del titolo</button>
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #fff;">Lettura selettiva</button>
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #d1ecf1;">Uso evidenziatori</button>
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #d1ecf1;">Note a margine</button>
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #fff;">Rilettura mirata</button>
+                    
+                    <div class="disability-specific">
+                        <h4>📊 Valutazione delle Strategie Apprese</h4>
+                        <div class="portfolio-item">
+                            <label><strong>🎯 Strategie di lettura sviluppate:</strong></label>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
+                                <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #d1ecf1; padding: 5px 10px; border-radius: 5px;">Pre-lettura del titolo</button>
+                                <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #fff; padding: 5px 10px; border-radius: 5px;">Lettura selettiva</button>
+                                <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #17a2b8; background: #d1ecf1; padding: 5px 10px; border-radius: 5px;">Uso evidenziatori</button>
+                            </div>
+                            
+                            <label><strong>📝 Strategie di scrittura consolidate:</strong></label>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
+                                <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #28a745; background: #d4edda; padding: 5px 10px; border-radius: 5px;">Scaletta preliminare</button>
+                                <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #28a745; background: #d4edda; padding: 5px 10px; border-radius: 5px;">Brainstorming visivo</button>
+                            </div>
+                            
+                            <label><strong>🔍 Osservazioni qualitative:</strong></label>
+                            <textarea placeholder="Descrivi l'evoluzione delle strategie..." style="min-height: 80px; width: 100%;">Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie efficaci.</textarea>
                         </div>
-                        
-                        <label><strong>📝 Strategie di scrittura consolidate:</strong></label>
-                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #28a745; background: #d4edda;">Scaletta preliminare</button>
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #28a745; background: #d4edda;">Brainstorming visivo</button>
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #28a745; background: #fff;">Revisione guidata</button>
-                            <button type="button" onclick="toggleStrategy(this)" class="strategy-btn" style="border: 2px solid #28a745; background: #d4edda;">Controllo ortografico</button>
-                        </div>
-                        
-                        <label><strong>🔍 Osservazioni qualitative:</strong></label>
-                        <textarea placeholder="Descrivi l'evoluzione delle strategie e l'autonomia acquisita..." style="min-height: 80px;">
-Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie efficaci. Utilizza spontaneamente la sintesi vocale per i testi lunghi e ha imparato a organizzare il lavoro attraverso scalette visive.
-                        </textarea>
                     </div>
                 </div>
             `;
@@ -2097,12 +2077,12 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                     <div class="competenza-item">
                         <label>Gestione delle transizioni:</label>
                         <input type="range" min="1" max="4" value="2" class="range-input" id="autism-transitions" onchange="updateRange(this)">
-                        <div class="range-value level-2" id="autism-transitions-value">Con supporto continuo</div>
+                        <div class="range-value level-2" id="autism-transitions-value">Base</div>
                     </div>
                     <div class="competenza-item">
                         <label>Flessibilità cognitiva:</label>
                         <input type="range" min="1" max="4" value="2" class="range-input" id="autism-flexibility" onchange="updateRange(this)">
-                        <div class="range-value level-2" id="autism-flexibility-value">Con supporto continuo</div>
+                        <div class="range-value level-2" id="autism-flexibility-value">Base</div>
                     </div>
                     <div class="competenza-item">
                         <label>Gestione dell'imprevisto:</label>
@@ -2115,28 +2095,20 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                     <h4>💫 Interessi Specifici come Leve di Apprendimento</h4>
                     <div class="portfolio-item">
                         <label>Interesse principale identificato:</label>
-                        <input type="text" value="Informatica e videogiochi" placeholder="Descrivi l'interesse specifico...">
+                        <input type="text" value="Informatica e videogiochi" placeholder="Descrivi l'interesse specifico..." style="width: 100%; padding: 8px; margin-bottom: 10px;">
                         
                         <label>Come viene utilizzato come motivatore:</label>
-                        <textarea placeholder="Descrivi come l'interesse viene utilizzato per motivare l'apprendimento...">L'interesse per l'informatica viene utilizzato per motivare l'apprendimento del foglio di calcolo. Marco è più disposto a completare esercizi matematici quando collegati ai videogiochi.</textarea>
+                        <textarea placeholder="Descrivi come l'interesse viene utilizzato..." style="width: 100%; height: 60px; margin-bottom: 10px;">L'interesse per l'informatica viene utilizzato per motivare l'apprendimento.</textarea>
                         
-                        <label>Trasferimento ad altri ambiti:</label>
-                        <textarea placeholder="Come l'interesse facilita l'apprendimento in altre materie...">Le competenze informatiche vengono trasferite nelle attività di laboratorio e nell'organizzazione del materiale scolastico digitale.</textarea>
-                        
-                        <label>Intensità dell'interesse:</label>
-                        <input type="range" min="1" max="4" value="4" class="range-input" id="autism-interest-intensity" onchange="updateRange(this)">
-                        <div class="range-value level-4" id="autism-interest-intensity-value">Molto elevata</div>
+                        <label>Preferenze sensoriali:</label>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
+                            <span style="padding: 5px 10px; background: #d4edda; border-radius: 15px; cursor: pointer; border: 2px solid #28a745;" onclick="toggleAusilio(this)">🔇 Ambiente silenzioso</span>
+                            <span style="padding: 5px 10px; background: #fff3cd; border-radius: 15px; cursor: pointer; border: 2px solid #f39c12;" onclick="toggleAusilio(this)">💡 Luce naturale</span>
+                            <span style="padding: 5px 10px; background: #d1ecf1; border-radius: 15px; cursor: pointer; border: 2px solid #17a2b8;" onclick="toggleAusilio(this)">🪑 Posto fisso</span>
+                        </div>
                     </div>
                 </div>
-                
-               <label>Preferenze sensoriali:</label>
-<div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
-    <span style="padding: 5px 10px; background: #d4edda; border-radius: 15px; cursor: pointer; border: 2px solid #28a745;" onclick="toggleAusilio(this)">🔇 Ambiente silenzioso</span>
-    <span style="padding: 5px 10px; background: #fff3cd; border-radius: 15px; cursor: pointer; border: 2px solid #f39c12;" onclick="toggleAusilio(this)">💡 Luce naturale</span>
-    <span style="padding: 5px 10px; background: #d1ecf1; border-radius: 15px; cursor: pointer; border: 2px solid #17a2b8;" onclick="toggleAusilio(this)">🪑 Posto fisso</span>
-    <span style="padding: 5px 10px; background: #f8d7da; border-radius: 15px; cursor: pointer; border: 2px solid #dc3545;" onclick="toggleAusilio(this)">⏰ Routine strutturate</span>
-</div>        
-             `;
+            `;
         }
 
         function generateSensorialContent() {
@@ -2152,32 +2124,11 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                         </select>
                         
                         <label>Adattamenti materiali didattici:</label>
-                        <textarea placeholder="Descrivi gli adattamenti utilizzati..." style="min-height: 80px;">Testi in formato digitale ingrandito, utilizzo di screen reader per documenti complessi, materiali tattili per concetti matematici.</textarea>
+                        <textarea placeholder="Descrivi gli adattamenti utilizzati..." style="min-height: 80px; width: 100%; margin-bottom: 15px;">Testi in formato digitale ingrandito, utilizzo di screen reader.</textarea>
                         
                         <label>Efficacia degli adattamenti:</label>
                         <input type="range" min="1" max="4" value="3" class="range-input" onchange="updateRange(this)" id="sensorial-efficacy">
-                        <div class="range-value level-3" id="sensorial-efficacy-value">Efficaci</div>
-                    </div>
-                </div>
-                
-                <div class="disability-specific">
-                    <h4>🤝 Partecipazione e Interazione</h4>
-                    <div class="competenza-item">
-                        <label>Partecipazione alle attività di gruppo:</label>
-                        <input type="range" min="1" max="4" value="3" class="range-input" id="sensorial-participation" onchange="updateRange(this)">
-                        <div class="range-value level-3" id="sensorial-participation-value">Buona</div>
-                    </div>
-                    
-                    <div class="competenza-item">
-                        <label>Utilizzo di tecnologie assistive:</label>
-                        <input type="range" min="1" max="4" value="4" class="range-input" id="sensorial-technology" onchange="updateRange(this)">
-                        <div class="range-value level-4" id="sensorial-technology-value">Eccellente</div>
-                    </div>
-                    
-                    <div class="competenza-item">
-                        <label>Autonomia negli spostamenti:</label>
-                        <input type="range" min="1" max="4" value="3" class="range-input" id="sensorial-mobility" onchange="updateRange(this)">
-                        <div class="range-value level-3" id="sensorial-mobility-value">Buona</div>
+                        <div class="range-value level-3" id="sensorial-efficacy-value">Intermedio</div>
                     </div>
                 </div>
                 
@@ -2186,42 +2137,39 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                     <div class="portfolio-item">
                         <label>Ausili utilizzati:</label>
                         <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
-    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #d4edda; border: 2px solid #28a745; border-radius: 15px; cursor: pointer;">🖥️ Screen reader</button>
-    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff; border: 2px solid #28a745; border-radius: 15px; cursor: pointer;">🔍 Lente ingrandimento</button>
-    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff3cd; border: 2px solid #f39c12; border-radius: 15px; cursor: pointer;">🎧 Amplificatori audio</button>
-    <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff; border: 2px solid #17a2b8; border-radius: 15px; cursor: pointer;">⌨️ Tastiera Braille</button>
-</div>
+                            <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #d4edda; border: 2px solid #28a745; border-radius: 15px; cursor: pointer;">🖥️ Screen reader</button>
+                            <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff; border: 2px solid #28a745; border-radius: 15px; cursor: pointer;">🔍 Lente ingrandimento</button>
+                            <button type="button" onclick="toggleAusilio(this)" class="ausilio-btn" style="padding: 5px 10px; background: #fff3cd; border: 2px solid #f39c12; border-radius: 15px; cursor: pointer;">🎧 Amplificatori audio</button>
+                        </div>
                         
-                       <!-- AREA COMMENTI: -->
-<div style="margin-top: 15px;">
-    <label><strong>💬 Commenti sugli ausili selezionati:</strong></label>
-    <textarea id="ausili-comments" placeholder="Descrivi l'efficacia degli ausili selezionati, eventuali difficoltà, miglioramenti osservati..." style="width: 100%; height: 80px; margin-top: 10px;"></textarea>
-</div>
+                        <div style="margin-top: 15px;">
+                            <label><strong>💬 Commenti sugli ausili selezionati:</strong></label>
+                            <textarea id="ausili-comments" placeholder="Descrivi l'efficacia degli ausili selezionati..." style="width: 100%; height: 80px; margin-top: 10px;"></textarea>
+                        </div>
+                    </div>
+                </div>
             `;
         }
         
         function selectPhase(element) {
             // Rimuovi selezione da tutti gli elementi fratelli
-            element.parentNode.querySelectorAll('.progress-phase').forEach(phase => {
-                phase.classList.remove('selected');
-            });
+            const parent = element.parentNode;
+            if (parent) {
+                parent.querySelectorAll('.progress-phase').forEach(phase => {
+                    phase.classList.remove('selected');
+                });
+            }
             // Aggiungi selezione all'elemento cliccato
             element.classList.add('selected');
         }
         
-        function setProgress(element, level) {
-            // Rimuovi tutte le classi di livello
-            element.classList.remove('not-started', 'emerging', 'consolidating', 'acquired');
-            // Aggiungi la nuova classe
-            element.classList.add(level);
-        }
-        
         function updateDashboard() {
             // Aggiorna nome studente
-            const studentName = document.getElementById('studentName').value || 'Studente';
-            const dashboardName = document.getElementById('dashboard-student-name');
-            if (dashboardName) {
-                dashboardName.textContent = studentName;
+            const studentNameEl = document.getElementById('studentName');
+            const dashboardNameEl = document.getElementById('dashboard-student-name');
+            const studentName = studentNameEl ? studentNameEl.value || 'Studente' : 'Studente';
+            if (dashboardNameEl) {
+                dashboardNameEl.textContent = studentName;
             }
             
             // Calcola medie competenze
@@ -2510,10 +2458,13 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
         // Funzioni per l'autovalutazione guidata
         function selectEmotion(button) {
             // Rimuovi selezione da tutti i bottoni emoticon dello stesso gruppo
-            const emotionButtons = button.parentNode.querySelectorAll('.emotion-btn');
-            emotionButtons.forEach(btn => {
-                btn.classList.remove('selected');
-            });
+            const parent = button.parentNode;
+            if (parent) {
+                const emotionButtons = parent.querySelectorAll('.emotion-btn');
+                emotionButtons.forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+            }
             
             // Seleziona il bottone cliccato
             button.classList.add('selected');
@@ -2532,10 +2483,33 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
             } else {
                 // Determina il colore di sfondo basato sul colore del bordo
                 const borderColor = button.style.borderColor;
-                if (borderColor === 'rgb(23, 162, 184)') {
+                if (borderColor.includes('23, 162, 184')) {
                     button.style.background = '#d1ecf1';
-                } else if (borderColor === 'rgb(40, 167, 69)') {
+                } else if (borderColor.includes('40, 167, 69')) {
                     button.style.background = '#d4edda';
+                }
+            }
+        }
+        
+        function toggleAusilio(button) {
+            const isSelected = button.style.background !== 'rgb(255, 255, 255)';
+            
+            if (isSelected) {
+                button.style.background = '#fff';
+            } else {
+                const borderColor = button.style.borderColor;
+                if (borderColor.includes('40, 167, 69')) {
+                    button.style.background = '#d4edda';
+                } else if (borderColor.includes('243, 156, 18')) {
+                    button.style.background = '#fff3cd';
+                } else if (borderColor.includes('23, 162, 184')) {
+                    button.style.background = '#d1ecf1';
+                } else if (borderColor.includes('111, 66, 193')) {
+                    button.style.background = '#e2d9f3';
+                } else if (borderColor.includes('232, 62, 140')) {
+                    button.style.background = '#f8d7e9';
+                } else if (borderColor.includes('220, 53, 69')) {
+                    button.style.background = '#f8d7da';
                 }
             }
         }
@@ -2545,15 +2519,23 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
         }
         
         function generateReport() {
-            const studentName = document.getElementById('studentName').value || 'Studente';
-            const disabilityType = document.getElementById('disabilityType').value;
-            const date = document.getElementById('currentDate').value;
+            const studentNameEl = document.getElementById('studentName');
+            const disabilityTypeEl = document.getElementById('disabilityType');
+            const dateEl = document.getElementById('currentDate');
+            
+            const studentName = studentNameEl ? studentNameEl.value || 'Studente' : 'Studente';
+            const disabilityType = disabilityTypeEl ? disabilityTypeEl.value : 'altra';
+            const date = dateEl ? dateEl.value : new Date().toISOString().split('T')[0];
             const competenze = calculateCompetenceAverages();
             
             // Raccogli osservazioni con approccio formativo
-            const feedUp = document.querySelector('textarea[placeholder*="Obiettivi chiari"]')?.value || '';
-            const feedBack = document.querySelector('textarea[placeholder*="progressi attuali"]')?.value || '';
-            const feedForward = document.querySelector('textarea[placeholder*="miglioramento"]')?.value || '';
+            const feedUpEl = document.querySelector('textarea[placeholder*="Obiettivi chiari"]');
+            const feedBackEl = document.querySelector('textarea[placeholder*="progressi attuali"]');
+            const feedForwardEl = document.querySelector('textarea[placeholder*="miglioramento"]');
+            
+            const feedUp = feedUpEl ? feedUpEl.value : '';
+            const feedBack = feedBackEl ? feedBackEl.value : '';
+            const feedForward = feedForwardEl ? feedForwardEl.value : '';
             
             // Crea oggetto report completo con principi formativi
             const report = {
@@ -2645,31 +2627,11 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                             </div>
                         </div>
                         
-                        <div style="background: #d1ecf1; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                            <h3 style="color: #0c5460;">🔄 Strategie di Crescita</h3>
-                            <div style="background: white; padding: 15px; border-radius: 8px;">
-                                ${generateGrowthStrategies(report.competenzeTrasversali)}
-                            </div>
-                        </div>
-                        
-                        <div style="background: #f8d7da; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
-                            <h3 style="color: #721c24;">📈 Raccomandazioni Evidence-Based</h3>
-                            <div style="background: white; padding: 15px; border-radius: 8px;">
-                                ${generateEvidenceBasedRecommendations(report)}
-                            </div>
-                        </div>
-                        
                         <div style="text-align: center; margin-top: 30px;">
-                            <button onclick="downloadAdvancedReport(${JSON.stringify(report).replace(/"/g, '&quot;')})" style="background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                                💾 Scarica Report Completo
+                            <button onclick="downloadAdvancedReport()" style="background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px;">
+                                💾 Scarica Report
                             </button>
-                            <button onclick="printAdvancedReport()" style="background: #17a2b8; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                                🖨️ Stampa Report
-                            </button>
-                            <button onclick="shareReport()" style="background: #6f42c1; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                                📤 Condividi con Team
-                            </button>
-                            <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="background: #6c757d; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="background: #6c757d; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px;">
                                 ✖️ Chiudi
                             </button>
                         </div>
@@ -2763,96 +2725,31 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
             }
             
             if (talents.length === 0) {
-                return '<p><em>💎 Ogni studente possiede talenti unici. Il sistema continua a monitorare l\'emergere di potenzialità specifiche attraverso l\'osservazione sistematica.</em></p>';
+                return '<p><em>💎 Ogni studente possiede talenti unici. Il sistema continua a monitorare l\'emergere di potenzialità specifiche.</em></p>';
             }
             
             return '<ul style="margin: 0; padding-left: 20px;">' + talents.map(t => `<li style="margin-bottom: 8px;">${t}</li>`).join('') + '</ul>';
         }
-        
-        function generateGrowthStrategies(competenze) {
-            const strategies = [];
-            
-            if (competenze.collaborazione < 2.5) {
-                strategies.push('🤝 <strong>Sviluppo Collaborativo:</strong> Implementare attività di cooperative learning e peer tutoring strutturate');
-            }
-            if (competenze.creativita < 2.5) {
-                strategies.push('🎨 <strong>Stimolazione Creativa:</strong> Proporre compiti aperti con soluzioni multiple e tecniche di brainstorming visivo');
-            }
-            if (competenze.resilienza < 2.5) {
-                strategies.push('💪 <strong>Costruzione Resilienza:</strong> Valorizzare gli errori come opportunità di apprendimento e celebrare i micro-progressi');
-            }
-            if (competenze.metacognizione < 2.5) {
-                strategies.push('🧠 <strong>Sviluppo Metacognitivo:</strong> Introdurre routine di auto-riflessione e monitoraggio dei propri processi di apprendimento');
-            }
-            
-            return strategies.length > 0 
-                ? '<ul style="margin: 0; padding-left: 20px;">' + strategies.map(s => `<li style="margin-bottom: 8px;">${s}</li>`).join('') + '</ul>'
-                : '<p><em>🌟 Lo studente mostra un profilo equilibrato. Mantenere gli approcci attuali e introdurre sfide progressive per il consolidamento.</em></p>';
-        }
-        
-        function generateEvidenceBasedRecommendations(report) {
-            const recommendations = [];
-            const competenze = report.competenzeTrasversali;
-            const disability = report.tipologiaDisabilita;
-            
-            // Raccomandazioni basate sui principi di Black & Wiliam
-            recommendations.push('📊 <strong>Feedback Sistematico:</strong> Implementare cicli di feedback settimanali focalizzati su processo più che su risultato');
-            
-            // Raccomandazioni specifiche per tipologia
-            if (disability === 'intellettiva') {
-                recommendations.push('🔬 <strong>Micro-progressi:</strong> Utilizzare scale graduate per rendere visibili anche i più piccoli miglioramenti');
-                recommendations.push('🎯 <strong>Compiti Autentici:</strong> Privilegiare attività funzionali collegate alla vita quotidiana');
-            } else if (disability === 'dsa') {
-                recommendations.push('🛠️ <strong>Strumenti Compensativi:</strong> Monitorare sistematicamente l\'efficacia degli ausili tecnologici utilizzati');
-                recommendations.push('📝 <strong>Valutazione Differenziata:</strong> Focalizzare la valutazione sui contenuti piuttosto che sulla forma');
-            } else if (disability === 'autismo') {
-                recommendations.push('🗺️ <strong>Strutturazione Visiva:</strong> Utilizzare supporti visivi per chiarire aspettative e progressi');
-                recommendations.push('💫 <strong>Interessi Speciali:</strong> Sfruttare gli interessi specifici come mediatori didattici');
-            }
-            
-            // Raccomandazioni basate sul profilo competenze
-            if (competenze.creativita >= 3.0) {
-                recommendations.push('🎨 <strong>Valorizzazione Talenti:</strong> Creare opportunità per esprimere e sviluppare ulteriormente le capacità creative');
-            }
-            
-            return '<ul style="margin: 0; padding-left: 20px;">' + recommendations.map(r => `<li style="margin-bottom: 8px;">${r}</li>`).join('') + '</ul>';
-        }
 
-        function downloadAdvancedReport(report) {
+        function downloadAdvancedReport() {
             try {
-                const reportStr = JSON.stringify(report, null, 2);
+                const reportData = {
+                    versione: '4.0',
+                    timestamp: new Date().toISOString(),
+                    studente: document.getElementById('studentName')?.value || 'Studente',
+                    competenze: calculateCompetenceAverages()
+                };
+                
+                const reportStr = JSON.stringify(reportData, null, 2);
                 const reportBlob = new Blob([reportStr], {type: 'application/json'});
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(reportBlob);
-                link.download = `report_inclusivo_${report.studente.replace(/\s+/g, '_')}_${report.dataOsservazione}.json`;
+                link.download = `report_inclusivo_${reportData.studente.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
                 link.click();
                 
-                showNotification('📥 Report inclusivo avanzato scaricato con successo!', 'success');
+                showNotification('📥 Report scaricato con successo!', 'success');
             } catch (error) {
                 showNotification('❌ Errore nel download del report', 'error');
-            }
-        }
-        
-        function printAdvancedReport() {
-            window.print();
-        }
-        
-        function shareReport() {
-            const data = {
-                title: 'Report Valutativo Inclusivo',
-                text: 'Condivisione report del sistema "Valutare l\'Invisibile"',
-                url: window.location.href
-            };
-            
-            if (navigator.share) {
-                navigator.share(data)
-                    .then(() => showNotification('📤 Report condiviso con successo!', 'success'))
-                    .catch(() => showNotification('❌ Errore nella condivisione', 'error'));
-            } else {
-                // Fallback per browser che non supportano Web Share API
-                navigator.clipboard.writeText(window.location.href)
-                    .then(() => showNotification('📋 Link copiato negli appunti!', 'info'))
-                    .catch(() => showNotification('❌ Impossibile copiare il link', 'error'));
             }
         }
 
@@ -2870,20 +2767,27 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
         }
         
         function collectPortfolioData() {
+            const portfolioTextarea = document.querySelector('#tab-portfolio textarea');
+            const obiettiviInput = document.querySelector('#tab-portfolio input[value*="foglio"]');
+            const lavoroInput = document.querySelector('#tab-portfolio input[value*="presenze"]');
+            const riflessioniTextarea = document.querySelector('#tab-portfolio textarea[placeholder*="riflessione"]');
+            
             return {
-                presentazione: document.querySelector('#tab-portfolio textarea')?.value || '',
-                obiettiviPersonalizzati: document.querySelector('#tab-portfolio input[value="Utilizzo autonomo del foglio di calcolo"]')?.value || '',
+                presentazione: portfolioTextarea ? portfolioTextarea.value : '',
+                obiettiviPersonalizzati: obiettiviInput ? obiettiviInput.value : '',
                 lavoroSignificativo: {
-                    titolo: document.querySelector('#tab-portfolio input[value="Gestione presenze classe"]')?.value || '',
-                    descrizione: document.querySelector('#tab-portfolio textarea[placeholder*="Descrivi il lavoro"]')?.value || ''
+                    titolo: lavoroInput ? lavoroInput.value : '',
+                    descrizione: ''
                 },
-                riflessioni: document.querySelector('#tab-portfolio textarea[placeholder*="riflessione"]')?.value || ''
+                riflessioni: riflessioniTextarea ? riflessioniTextarea.value : ''
             };
         }
         
         function collectObjectivesData() {
             const objectives = [];
-            document.querySelectorAll('#tab-objectives .objective-item').forEach((item, index) => {
+            const objectiveItems = document.querySelectorAll('#tab-objectives .objective-item');
+            
+            objectiveItems.forEach((item, index) => {
                 if (index > 0) { // Salta il primo che è l'obiettivo principale
                     const input = item.querySelector('input[type="text"]');
                     const progressIndicators = item.querySelectorAll('.progress-indicator');
@@ -2907,10 +2811,14 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
         }
         
         function saveData() {
+            const studentNameEl = document.getElementById('studentName');
+            const disabilityTypeEl = document.getElementById('disabilityType');
+            const dateEl = document.getElementById('currentDate');
+            
             const data = {
-                studente: document.getElementById('studentName').value,
-                tipologia: document.getElementById('disabilityType').value,
-                data: document.getElementById('currentDate').value,
+                studente: studentNameEl ? studentNameEl.value : '',
+                tipologia: disabilityTypeEl ? disabilityTypeEl.value : '',
+                data: dateEl ? dateEl.value : '',
                 competenze: calculateCompetenceAverages(),
                 dettagli: collectDetailedData(),
                 salvataggioTemporaneo: true,
@@ -2923,7 +2831,7 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                 saves.push(data);
                 sessionStorage.setItem('valutazioniSalvate', JSON.stringify(saves));
                 
-                showNotification('✅ Dati salvati con successo nella sessione!', 'success');
+                showNotification('✅ Dati salvati con successo!', 'success');
             } catch (e) {
                 // Fallback: salva come file
                 downloadData(data);
@@ -2943,9 +2851,9 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
         function exportPDF() {
             showNotification('🔄 Generazione PDF in corso...', 'info');
             
-            // Simula generazione PDF con contenuto reale
             setTimeout(() => {
-                const studentName = document.getElementById('studentName').value || 'Studente';
+                const studentNameEl = document.getElementById('studentName');
+                const studentName = studentNameEl ? studentNameEl.value || 'Studente' : 'Studente';
                 const competenze = calculateCompetenceAverages();
                 const date = new Date().toLocaleDateString('it-IT');
                 
@@ -2996,7 +2904,7 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                     
                     <div class="competenza">
                         <h3>📝 Note del Sistema</h3>
-                        <p><em>Questo report è stato generato dal Sistema Valutativo Inclusivo "Valutare l'Invisibile", basato sui principi di valutazione formativa di Black & Wiliam e progettato per valorizzare le competenze spesso invisibili negli studenti con disabilità.</em></p>
+                        <p><em>Questo report è stato generato dal Sistema Valutativo Inclusivo "Valutare l'Invisibile", basato sui principi di valutazione formativa di Black & Wiliam.</em></p>
                     </div>
                 </body>
                 </html>
@@ -3004,74 +2912,78 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                 
                 // Apri una nuova finestra con il contenuto PDF
                 const printWindow = window.open('', '_blank');
-                printWindow.document.write(pdfContent);
-                printWindow.document.close();
-                printWindow.focus();
+                if (printWindow) {
+                    printWindow.document.write(pdfContent);
+                    printWindow.document.close();
+                    printWindow.focus();
+                    
+                    // Attiva automaticamente la stampa
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 500);
+                }
                 
-                // Attiva automaticamente la stampa
-                setTimeout(() => {
-                    printWindow.print();
-                }, 500);
-                
-                showNotification('📄 Report PDF generato! Utilizza la funzione di stampa del browser per salvare come PDF.', 'success');
+                showNotification('📄 Report PDF generato!', 'success');
             }, 1500);
         }
 
         function generateStrengthsList(competenze) {
             const strengths = [];
             
-            // Analisi più sofisticata basata sui principi di Black & Wiliam
             if (competenze.collaborazione >= 2.5) {
-                strengths.push('<li><strong>Collaborazione efficace:</strong> Dimostra buone capacità di lavoro in gruppo e comunicazione interpersonale</li>');
+                strengths.push('<li><strong>Collaborazione efficace:</strong> Dimostra buone capacità di lavoro in gruppo</li>');
             }
             if (competenze.autonomia >= 2.5) {
-                strengths.push('<li><strong>Crescente autonomia:</strong> Mostra progressi nell\'organizzazione del lavoro e nella gestione delle difficoltà</li>');
+                strengths.push('<li><strong>Crescente autonomia:</strong> Mostra progressi nell\'organizzazione del lavoro</li>');
             }
             if (competenze.resilienza >= 2.5) {
-                strengths.push('<li><strong>Resilienza positiva:</strong> Affronta gli ostacoli con persistenza e impara dagli errori</li>');
+                strengths.push('<li><strong>Resilienza positiva:</strong> Affronta gli ostacoli con persistenza</li>');
             }
             if (competenze.metacognizione >= 2.0) {
-                strengths.push('<li><strong>Consapevolezza metacognitiva:</strong> Sta sviluppando la capacità di riflettere sul proprio apprendimento</li>');
+                strengths.push('<li><strong>Consapevolezza metacognitiva:</strong> Sviluppa capacità di riflettere sul proprio apprendimento</li>');
             }
-            
-            // Aggiungiamo valutazione delle dimensioni "invisibili"
-            if (competenze.creativita && competenze.creativita >= 2.5) {
-                strengths.push('<li><strong>Pensiero creativo:</strong> Manifesta originalità e flessibilità nell\'approccio ai problemi</li>');
+            if (competenze.creativita >= 2.5) {
+                strengths.push('<li><strong>Pensiero creativo:</strong> Manifesta originalità nell\'approccio ai problemi</li>');
             }
-            if (competenze.socioemotive && competenze.socioemotive >= 2.5) {
+            if (competenze.socioemotive >= 2.5) {
                 strengths.push('<li><strong>Competenze socio-emotive:</strong> Buon riconoscimento e gestione delle emozioni</li>');
             }
             
-            return strengths.length > 0 ? '<ul>' + strengths.join('') + '</ul>' : '<ul><li><strong>Potenziale in crescita:</strong> Tutti gli ambiti mostrano possibilità di sviluppo significativo</li></ul>';
+            return strengths.length > 0 ? '<ul>' + strengths.join('') + '</ul>' : '<ul><li><strong>Potenziale in crescita:</strong> Tutti gli ambiti mostrano possibilità di sviluppo</li></ul>';
         }
 
         function generateDevelopmentAreas(competenze) {
             const areas = [];
             
-            // Feedback orientato al miglioramento secondo i principi formativi
             if (competenze.collaborazione < 2.5) {
-                areas.push('<li><strong>Sviluppo collaborativo:</strong> Potenziare l\'ascolto attivo e la comunicazione nel gruppo</li>');
+                areas.push('<li><strong>Sviluppo collaborativo:</strong> Potenziare l\'ascolto attivo e la comunicazione</li>');
             }
             if (competenze.autonomia < 2.5) {
-                areas.push('<li><strong>Crescita dell\'autonomia:</strong> Sviluppare strategie di pianificazione e autoregolazione</li>');
+                areas.push('<li><strong>Crescita dell\'autonomia:</strong> Sviluppare strategie di pianificazione</li>');
             }
             if (competenze.resilienza < 2.5) {
-                areas.push('<li><strong>Rafforzamento della resilienza:</strong> Costruire strategie per affrontare le sfide e valorizzare gli errori come opportunità</li>');
+                areas.push('<li><strong>Rafforzamento della resilienza:</strong> Costruire strategie per affrontare le sfide</li>');
             }
             if (competenze.metacognizione < 2.0) {
-                areas.push('<li><strong>Consapevolezza metacognitiva:</strong> Sviluppare la riflessione sui propri processi di apprendimento</li>');
+                areas.push('<li><strong>Consapevolezza metacognitiva:</strong> Sviluppare la riflessione sui processi di apprendimento</li>');
             }
             if (competenze.creativita < 2.5) {
-                areas.push('<li><strong>Stimolazione creativa:</strong> Incoraggiare l\'espressione di idee originali e soluzioni innovative</li>');
+                areas.push('<li><strong>Stimolazione creativa:</strong> Incoraggiare l\'espressione di idee originali</li>');
             }
             if (competenze.socioemotive < 2.5) {
-                areas.push('<li><strong>Competenze socio-emotive:</strong> Rafforzare le abilità di riconoscimento e gestione emotiva</li>');
+                areas.push('<li><strong>Competenze socio-emotive:</strong> Rafforzare le abilità di gestione emotiva</li>');
             }
             
-            return areas.length > 0 ? '<ul>' + areas.join('') + '</ul>' : '<ul><li><strong>Consolidamento:</strong> Mantenere e approfondire i livelli raggiunti attraverso sfide progressive</li></ul>';
+            return areas.length > 0 ? '<ul>' + areas.join('') + '</ul>' : '<ul><li><strong>Consolidamento:</strong> Mantenere i livelli raggiunti attraverso sfide progressive</li></ul>';
         }
         
         function showNotification(message, type = 'info') {
+            // Rimuovi notifica esistente
+            const existing = document.querySelector('.notification');
+            if (existing) {
+                existing.remove();
+            }
+            
             const colors = {
                 success: '#d4edda',
                 warning: '#fff3cd',
@@ -3081,38 +2993,256 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
             
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.style.backgroundColor = colors[type];
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: ${colors[type]};
+                color: #333;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                max-width: 300px;
+                font-size: 14px;
+                border-left: 4px solid ${type === 'success' ? '#28a745' : type === 'warning' ? '#ffc107' : type === 'error' ? '#dc3545' : '#17a2b8'};
+                animation: slideIn 0.3s ease;
+            `;
             notification.textContent = message;
             
             document.body.appendChild(notification);
             
+            // Rimuovi dopo 3 secondi
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.remove();
-                    }
-                }, 300);
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
             }, 3000);
         }
 
-        // Test specifici per le funzionalità
+        // Gestione integrazione con Mappa Obiettivi
+        function openObjectivesManager() {
+            const objectivesWindow = window.open('mappa-obiettivi.html', 'MappaObiettivi', 
+                'width=1200,height=800,scrollbars=yes,resizable=yes');
+            
+            if (!objectivesWindow) {
+                showNotification('⚠️ Popup bloccato. Abilita i popup per aprire la mappa obiettivi.', 'warning');
+                return;
+            }
+            
+            // Listener per quando la finestra si chiude
+            const checkClosed = setInterval(() => {
+                if (objectivesWindow.closed) {
+                    clearInterval(checkClosed);
+                    setTimeout(() => {
+                        syncObjectivesData();
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        function syncObjectivesData() {
+            try {
+                const objectives = JSON.parse(localStorage.getItem('pei_objectives') || '[]');
+                updateObjectivesSummary(objectives);
+                updateObjectivesPreview(objectives);
+                updateObjectivesChart(objectives);
+                showNotification('📊 Dati obiettivi aggiornati!', 'success');
+            } catch (error) {
+                console.log('Dati obiettivi non disponibili');
+                showNotification('⚠️ Impossibile sincronizzare i dati', 'warning');
+            }
+        }
+
+        function updateObjectivesSummary(objectives) {
+            const total = objectives.length;
+            const completed = objectives.filter(obj => obj.status === 'acquisito').length;
+            const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            const totalEl = document.getElementById('totalPeiObjectives');
+            const completedEl = document.getElementById('completedPeiObjectives');
+            const progressEl = document.getElementById('progressPeiObjectives');
+            
+            if (totalEl) totalEl.textContent = total;
+            if (completedEl) completedEl.textContent = completed;
+            if (progressEl) progressEl.textContent = progress + '%';
+        }
+
+        function updateObjectivesPreview(objectives) {
+            const preview = document.getElementById('objectivesPreview');
+            if (!preview) return;
+            
+            if (objectives.length === 0) {
+                preview.innerHTML = `
+                    <div class="empty-preview" style="text-align: center; padding: 20px; color: #6c757d;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🎯</div>
+                        <p>Nessun obiettivo definito</p>
+                        <p style="font-size: 0.9em;">Clicca su "Gestisci Obiettivi PEI" per iniziare</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const firstFour = objectives.slice(0, 4);
+            const statusLabels = {
+                'acquisito': 'Acquisito',
+                'consolidamento': 'In Consolidamento', 
+                'emergente': 'Emergente',
+                'avvio': 'In Avvio'
+            };
+            
+            preview.innerHTML = firstFour.map(obj => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <span style="flex: 1; font-size: 0.9em;">${obj.title}</span>
+                    <span style="padding: 2px 8px; border-radius: 12px; font-size: 0.8em; background: ${getStatusColor(obj.status)}; color: white;">
+                        ${statusLabels[obj.status]}
+                    </span>
+                </div>
+            `).join('') + (objectives.length > 4 ? 
+                `<div style="text-align: center; margin-top: 15px; color: #6c757d; font-size: 0.85rem;">
+                    ... e altri ${objectives.length - 4} obiettivi
+                </div>` : '');
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'acquisito': '#28a745',
+                'consolidamento': '#ffc107',
+                'emergente': '#fd7e14',
+                'avvio': '#007bff'
+            };
+            return colors[status] || '#6c757d';
+        }
+
+        function updateObjectivesChart(objectives) {
+            const canvas = document.getElementById('objectivesChart');
+            if (!canvas) return;
+            
+            if (objectives.length === 0) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#6c757d';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
+                ctx.font = '12px Arial';
+                ctx.fillText('Aggiungi obiettivi per vedere il grafico', canvas.width / 2, canvas.height / 2 + 10);
+                return;
+            }
+            
+            // Calcola le statistiche
+            const statusCounts = {
+                'acquisito': 0,
+                'consolidamento': 0,
+                'emergente': 0,
+                'avvio': 0
+            };
+            
+            objectives.forEach(obj => {
+                if (statusCounts.hasOwnProperty(obj.status)) {
+                    statusCounts[obj.status]++;
+                }
+            });
+            
+            const data = [
+                { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
+                { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
+                { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
+                { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
+            ];
+            
+            const activeData = data.filter(d => d.value > 0);
+            
+            if (activeData.length > 0) {
+                drawDonutChart(canvas, activeData, objectives.length);
+            }
+        }
+
+        function drawDonutChart(canvas, data, total) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const outerRadius = Math.min(centerX, centerY) - 20;
+            const innerRadius = outerRadius * 0.6;
+            
+            let currentAngle = -Math.PI / 2;
+            
+            data.forEach(item => {
+                const sliceAngle = (item.value / total) * 2 * Math.PI;
+                
+                // Disegna slice
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, outerRadius, currentAngle, currentAngle + sliceAngle);
+                ctx.arc(centerX, centerY, innerRadius, currentAngle + sliceAngle, currentAngle, true);
+                ctx.closePath();
+                ctx.fillStyle = item.color;
+                ctx.fill();
+                
+                // Etichetta con valore
+                if (item.value > 0) {
+                    const labelAngle = currentAngle + sliceAngle / 2;
+                    const labelRadius = (outerRadius + innerRadius) / 2;
+                    const labelX = centerX + Math.cos(labelAngle) * labelRadius;
+                    const labelY = centerY + Math.sin(labelAngle) * labelRadius;
+                    
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                    ctx.shadowBlur = 2;
+                    ctx.fillText(item.value, labelX, labelY);
+                    ctx.shadowBlur = 0;
+                }
+                
+                currentAngle += sliceAngle;
+            });
+            
+            // Testo centrale
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(total, centerX, centerY - 5);
+            
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#666';
+            ctx.fillText('Obiettivi', centerX, centerY + 15);
+        }
+
+        // Listener per messaggi dalla mappa obiettivi
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'objectivesUpdated') {
+                setTimeout(() => {
+                    syncObjectivesData();
+                }, 500);
+            }
+        });
+
+        // Sincronizza i dati quando si torna alla dashboard
+        window.addEventListener('focus', function() {
+            setTimeout(() => {
+                syncObjectivesData();
+            }, 500);
+        });
+
+        // Test approfondito del sistema
         function testSystemFunctionality() {
             console.log('🔍 Test approfondito delle funzionalità...');
             
-            // Test responsività
             const isMobile = window.innerWidth <= 768;
             console.log(`📱 Responsività: ${isMobile ? 'Mobile view attiva' : 'Desktop view'}`);
             
-            // Test framework DSA
             const dsaFramework = document.querySelector('.disability-specific');
             console.log(`🎯 Framework DSA: ${dsaFramework ? 'Caricato correttamente' : 'Non trovato'}`);
             
-            // Test autovalutazione guidata
-            const autovalutazione = document.querySelector('.autovalutation-section');
-            console.log(`🤔 Autovalutazione guidata: ${autovalutazione ? 'Struttura presente' : 'Non trovata'}`);
-            
-            // Test salvataggio
             try {
                 sessionStorage.setItem('test', 'ok');
                 sessionStorage.removeItem('test');
@@ -3121,17 +3251,16 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                 console.log('💾 Sistema salvataggio: Fallback attivo');
             }
             
-            // Test Chart.js
             console.log(`📊 Chart.js: ${typeof Chart !== 'undefined' ? 'Caricato' : 'Non disponibile'}`);
             
             return true;
         }
 
-        // Evento per test al caricamento completo
+        // Test al caricamento completo
         window.addEventListener('load', function() {
             setTimeout(() => {
                 testSystemFunctionality();
-                showNotification('🎯 Sistema "Valutare l\'Invisibile" completamente testato e funzionale!', 'success');
+                showNotification('🎯 Sistema "Valutare l\'Invisibile" completamente funzionale!', 'success');
             }, 1000);
         });
 
@@ -3141,28 +3270,24 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
             showNotification('⚠️ Errore rilevato. Sistema in modalità di recupero.', 'warning');
         });
 
-        // Funzione per reset completo del sistema (per testing)
+        // Reset sistema per testing
         function resetSystem() {
             if (confirm('Sei sicuro di voler resettare tutti i dati?')) {
-                // Reset sliders
                 document.querySelectorAll('.range-input').forEach(slider => {
                     slider.value = 2;
                     updateRange(slider);
                 });
                 
-                // Reset form fields
                 document.querySelectorAll('textarea').forEach(textarea => {
                     if (!textarea.readOnly) {
                         textarea.value = '';
                     }
                 });
                 
-                // Reset selezioni
                 document.querySelectorAll('.selected').forEach(element => {
                     element.classList.remove('selected');
                 });
                 
-                // Clear storage
                 try {
                     sessionStorage.removeItem('valutazioniSalvate');
                 } catch (e) {
@@ -3176,426 +3301,23 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
             }
         }
 
-        // Funzione per esportare configurazione sistema
-        function exportSystemConfig() {
-            const config = {
-                version: '4.0',
-                timestamp: new Date().toISOString(),
-                features: {
-                    feedbackFormativo: true,
-                    microProgressi: true,
-                    frameworkDSA: true,
-                    autovalutazioneGuidata: true,
-                    portfolioDigitale: true,
-                    dashboard: true,
-                    exportPDF: true,
-                    salvataggio: true
-                },
-                principiPedagogici: {
-                    blackWiliam: true,
-                    udl: true,
-                    valutazioneInclusiva: true,
-                    intelligenceMultiple: true
-                }
-            };
-            
-            const configStr = JSON.stringify(config, null, 2);
-            const configBlob = new Blob([configStr], {type: 'application/json'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(configBlob);
-            link.download = 'sistema_valutativo_config_v4.json';
-            link.click();
-            
-            showNotification('⚙️ Configurazione sistema esportata!', 'info');
-        }
-
-        // Debug panel per sviluppatori (nascosto di default)
-        function showDebugPanel() {
-            const debugPanel = `
-                <div style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.9); color: white; padding: 20px; border-radius: 10px; z-index: 2000; max-width: 300px; font-size: 12px;">
-                    <h4>🔧 Debug Panel</h4>
-                    <p><strong>Versione:</strong> 4.0 Testata</p>
-                    <p><strong>Sliders attivi:</strong> ${document.querySelectorAll('.range-input').length}</p>
-                    <p><strong>Tab disponibili:</strong> ${document.querySelectorAll('.nav-tab').length}</p>
-                    <p><strong>Chart.js:</strong> ${typeof Chart !== 'undefined' ? '✅' : '❌'}</p>
-                    <p><strong>Storage:</strong> ${typeof Storage !== 'undefined' ? '✅' : '❌'}</p>
-                    <div style="margin-top: 15px;">
-                        <button onclick="resetSystem()" style="padding: 5px 10px; margin-right: 5px; font-size: 11px;">Reset</button>
-                        <button onclick="exportSystemConfig()" style="padding: 5px 10px; margin-right: 5px; font-size: 11px;">Export Config</button>
-                        <button onclick="this.closest('div').remove()" style="padding: 5px 10px; font-size: 11px;">Chiudi</button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.insertAdjacentHTML('beforeend', debugPanel);
-        }
-
-        // Shortcut per sviluppatori (Ctrl+Shift+D)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-                showDebugPanel();
+        // Aggiungi CSS per le animazioni
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
-        });
-        
-// Funzione per toggle ausili sensoriali
-    function toggleAusilio(button) {
-    const isSelected = button.style.background !== 'rgb(255, 255, 255)';
-    
-    if (isSelected) {
-        button.style.background = '#fff';
-    } else {
-        const borderColor = button.style.borderColor;
-        if (borderColor === 'rgb(40, 167, 69)') {
-            button.style.background = '#d4edda';
-        } else if (borderColor === 'rgb(243, 156, 18)') {
-            button.style.background = '#fff3cd';
-        } else if (borderColor === 'rgb(23, 162, 184)') {
-            button.style.background = '#d1ecf1';
-        } else if (borderColor === 'rgb(111, 66, 193)') {
-            button.style.background = '#e2d9f3';
-        } else if (borderColor === 'rgb(232, 62, 140)') {
-            button.style.background = '#f8d7e9';
-        } else if (borderColor === 'rgb(220, 53, 69)') {
-            button.style.background = '#f8d7da';
-        }
-    }
-}
-
-    // Funzione per toggle strumenti efficaci DSA
-    function toggleStrumentoEfficace(button) {
-        const isSelected = button.style.background !== 'rgb(255, 255, 255)';
-        
-        if (isSelected) {
-            button.style.background = '#fff';
-        } else {
-            button.style.background = '#d4edda';
-        }
-    }
-    // Variabili globali per la gestione obiettivi
-let objectivesChart = null;
-
-// Gestione integrazione con Mappa Obiettivi
-function openObjectivesManager() {
-    // Apre la mappa obiettivi in una nuova finestra
-    const objectivesWindow = window.open('mappa-obiettivi.html', 'MappaObiettivi', 
-        'width=1200,height=800,scrollbars=yes,resizable=yes');
-    
-    // Listener per quando la finestra si chiude
-    const checkClosed = setInterval(() => {
-        if (objectivesWindow.closed) {
-            clearInterval(checkClosed);
-            // Aggiorna automaticamente i dati quando la finestra si chiude
-            setTimeout(() => {
-                syncObjectivesData();
-            }, 500);
-        }
-    }, 1000);
-}
-
-function syncObjectivesData() {
-    try {
-        // Legge i dati dalla localStorage
-        const objectives = JSON.parse(localStorage.getItem('pei_objectives') || '[]');
-        
-        // Aggiorna le statistiche nella dashboard
-        updateObjectivesSummary(objectives);
-        updateObjectivesPreview(objectives);
-        updateObjectivesChart(objectives);
-        
-        showNotification('📊 Dati obiettivi aggiornati!', 'success');
-    } catch (error) {
-        console.log('Dati obiettivi non disponibili');
-        showNotification('⚠️ Impossibile sincronizzare i dati', 'warning');
-    }
-}
-
-function updateObjectivesSummary(objectives) {
-    const total = objectives.length;
-    const completed = objectives.filter(obj => obj.status === 'acquisito').length;
-    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-    
-    const totalEl = document.getElementById('totalPeiObjectives');
-    const completedEl = document.getElementById('completedPeiObjectives');
-    const progressEl = document.getElementById('progressPeiObjectives');
-    
-    if (totalEl) totalEl.textContent = total;
-    if (completedEl) completedEl.textContent = completed;
-    if (progressEl) progressEl.textContent = progress + '%';
-}
-
-function updateObjectivesPreview(objectives) {
-    const preview = document.getElementById('objectivesPreview');
-    if (!preview) return;
-    
-    if (objectives.length === 0) {
-        preview.innerHTML = `
-            <div class="empty-preview">
-                <div class="empty-icon">🎯</div>
-                <p>Nessun obiettivo definito</p>
-                <p class="empty-subtitle">Clicca su "Gestisci Obiettivi PEI" per iniziare</p>
-            </div>
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .notification {
+                animation: slideIn 0.3s ease;
+            }
         `;
-        return;
-    }
-    
-    // Mostra i primi 4 obiettivi
-    const firstFour = objectives.slice(0, 4);
-    const statusLabels = {
-        'acquisito': 'Acquisito',
-        'consolidamento': 'In Consolidamento', 
-        'emergente': 'Emergente',
-        'avvio': 'In Avvio'
-    };
-    
-    preview.innerHTML = firstFour.map(obj => `
-        <div class="objective-preview-item">
-            <span class="objective-preview-title">${obj.title}</span>
-            <span class="objective-preview-status status-${obj.status}">
-                ${statusLabels[obj.status]}
-            </span>
-        </div>
-    `).join('') + (objectives.length > 4 ? 
-        `<div style="text-align: center; margin-top: 15px; color: #6c757d; font-size: 0.85rem;">
-            ... e altri ${objectives.length - 4} obiettivi
-        </div>` : '');
-}
-
-function updateObjectivesChart(objectives) {
-    const canvas = document.getElementById('objectivesChart');
-    if (!canvas) return;
-    
-    if (objectives.length === 0) {
-        // Mostra messaggio se non ci sono obiettivi
-        const canvas = document.getElementById('objectivesChart');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#6c757d';
-        ctx.font = '16px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
-        ctx.font = '12px Arial';
-        ctx.fillText('Aggiungi obiettivi per vedere il grafico', canvas.width / 2, canvas.height / 2 + 10);
+        document.head.appendChild(style);
         
-        // Nasconde la legenda se esiste
-        hideLegend();
-        return;
-    }
-    
-    // Calcola le statistiche per i grafici
-    const statusCounts = {
-        'acquisito': 0,
-        'consolidamento': 0,
-        'emergente': 0,
-        'avvio': 0
-    };
-    
-    objectives.forEach(obj => {
-        if (statusCounts.hasOwnProperty(obj.status)) {
-            statusCounts[obj.status]++;
-        }
-    });
-    
-    // Dati per il grafico
-    const data = [
-        { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
-        { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
-        { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
-        { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
-    ];
-    
-    // Filtra solo i dati con valore > 0 per il grafico
-    const activeData = data.filter(d => d.value > 0);
-    
-    if (activeData.length === 0) {
-        updateObjectivesChart([]); // Ricorsione per mostrare messaggio vuoto
-        return;
-    }
-    
-    // Crea grafico a ciambella
-    drawDonutChart(canvas, activeData, objectives.length);
-    
-    // Crea legenda
-    createLegend(data, objectives.length);
-}
-
-function drawDonutChart(canvas, data, total) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const outerRadius = Math.min(centerX, centerY) - 20;
-    const innerRadius = outerRadius * 0.6;
-    
-    let currentAngle = -Math.PI / 2; // Inizia dall'alto
-    
-    data.forEach(item => {
-        const sliceAngle = (item.value / total) * 2 * Math.PI;
-        
-        // Disegna slice
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, outerRadius, currentAngle, currentAngle + sliceAngle);
-        ctx.arc(centerX, centerY, innerRadius, currentAngle + sliceAngle, currentAngle, true);
-        ctx.closePath();
-        ctx.fillStyle = item.color;
-        ctx.fill();
-        
-        // Disegna etichetta con valore
-        if (item.value > 0) {
-            const labelAngle = currentAngle + sliceAngle / 2;
-            const labelRadius = (outerRadius + innerRadius) / 2;
-            const labelX = centerX + Math.cos(labelAngle) * labelRadius;
-            const labelY = centerY + Math.sin(labelAngle) * labelRadius;
-            
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 14px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            
-            // Ombra per il testo
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowBlur = 2;
-            ctx.fillText(item.value, labelX, labelY);
-            ctx.shadowBlur = 0;
-        }
-        
-        currentAngle += sliceAngle;
-    });
-    
-    // Testo centrale con totale
-    ctx.fillStyle = '#333';
-    ctx.font = 'bold 24px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(total, centerX, centerY - 5);
-    
-    ctx.font = '12px Arial';
-    ctx.fillStyle = '#666';
-    ctx.fillText('Obiettivi', centerX, centerY + 15);
-}
-
-function createLegend(data, total) {
-    // Trova o crea il contenitore della legenda
-    let legendContainer = document.getElementById('chartLegend');
-    if (!legendContainer) {
-        legendContainer = document.createElement('div');
-        legendContainer.id = 'chartLegend';
-        legendContainer.className = 'chart-legend';
-        
-        // Inserisce la legenda dopo il canvas
-        const chartContainer = document.querySelector('.chart-container');
-        if (chartContainer && chartContainer.parentNode) {
-            chartContainer.parentNode.insertBefore(legendContainer, chartContainer.nextSibling);
-        }
-    }
-    
-    // Genera HTML della legenda
-    const legendHTML = data.map(item => {
-        const percentage = total > 0 ? Math.round((item.value / total) * 100) : 0;
-        return `
-            <div class="legend-item ${item.value === 0 ? 'legend-disabled' : ''}">
-                <div class="legend-color" style="background-color: ${item.color}"></div>
-                <div class="legend-label">
-                    <span class="legend-text">${item.label}</span>
-                    <span class="legend-value">${item.value} (${percentage}%)</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    legendContainer.innerHTML = legendHTML;
-}
-
-function hideLegend() {
-    const legendContainer = document.getElementById('chartLegend');
-    if (legendContainer) {
-        legendContainer.innerHTML = '';
-    }
-}
-    
-    // Crea grafico a barre semplice
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    const data = [
-        { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
-        { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
-        { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
-        { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
-    ];
-    
-    const maxValue = Math.max(...data.map(d => d.value), 1);
-    const barWidth = 60;
-    const barSpacing = 80;
-    const startX = (canvas.width - (data.length * barSpacing)) / 2;
-    const chartHeight = canvas.height - 60;
-    
-    data.forEach((item, index) => {
-        const x = startX + index * barSpacing;
-        const barHeight = (item.value / maxValue) * chartHeight * 0.7;
-        const y = canvas.height - 40 - barHeight;
-        
-        // Disegna barra
-        ctx.fillStyle = item.color;
-        ctx.fillRect(x, y, barWidth, barHeight);
-        
-        // Disegna valore
-        ctx.fillStyle = '#333';
-        ctx.font = 'bold 14px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(item.value, x + barWidth / 2, y - 5);
-        
-        // Disegna etichetta
-        ctx.font = '10px Arial';
-        ctx.fillText(item.label, x + barWidth / 2, canvas.height - 20);
-    });
-
-function showNotification(message, type = 'success') {
-    // Rimuovi notifica esistente
-    const existing = document.querySelector('.notification');
-    if (existing) {
-        existing.remove();
-    }
-    
-    // Crea nuova notifica
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    // Rimuovi dopo 3 secondi
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-
-// Listener per messaggi dalla mappa obiettivi
-window.addEventListener('message', function(event) {
-    if (event.data.type === 'objectivesUpdated') {
-        // La mappa obiettivi ha inviato dati aggiornati
-        setTimeout(() => {
-            syncObjectivesData();
-        }, 500);
-    }
-});
-
-// Sincronizza i dati all'avvio della pagina
-document.addEventListener('DOMContentLoaded', function() {
-    // Aspetta che tutto sia caricato, poi sincronizza
-    setTimeout(() => {
-        syncObjectivesData();
-    }, 1000);
-});
-
-// Listener per aggiornamenti automatici quando si torna alla dashboard
-window.addEventListener('focus', function() {
-    // Quando la finestra principale torna in focus, aggiorna i dati
-    setTimeout(() => {
-        syncObjectivesData();
-    }, 500);
-});
-        
-</script>
+    </script>
 </body>
 </html>
