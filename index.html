@@ -2043,7 +2043,7 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                     });
                 }
                 
- // Objectives Chart
+                // Objectives Chart
                 const objectivesCtx = document.getElementById('objectivesChart');
                 if (objectivesCtx && typeof Chart !== 'undefined') {
                     charts.objectives = new Chart(objectivesCtx, {
@@ -2052,11 +2052,7 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                             labels: ['Acquisito', 'In Consolidamento', 'Emergente', 'Non Emerso'],
                             datasets: [{
                                 data: [25, 50, 20, 5],
-                                backgroundColor: ['
-#28a745', '
-#fd7e14', '
-#ffc107', '
-#e9ecef'],
+                                backgroundColor: ['#28a745', '#fd7e14', '#ffc107', '#e9ecef'],
                                 borderWidth: 2,
                                 borderColor: '#fff'
                             }]
@@ -2069,7 +2065,7 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                         }
                     });
                 }
-
+                
                 // Levels Chart
                 const levelsCtx = document.getElementById('levelsChart');
                 if (levelsCtx && typeof Chart !== 'undefined') {
@@ -2080,11 +2076,7 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                             datasets: [{
                                 label: 'Numero di Competenze',
                                 data: [1, 15, 8, 0],
-                                backgroundColor: ['
-#e74c3c', '
-#f39c12', '
-#f1c40f', '
-#27ae60'],
+                                backgroundColor: ['#e74c3c', '#f39c12', '#f1c40f', '#27ae60'],
                                 borderWidth: 1,
                                 borderColor: '#fff'
                             }]
@@ -2108,7 +2100,7 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                 showNotification('⚠️ Grafici non disponibili. Chart.js richiesto.', 'warning');
             }
         }
-
+        
         function updateCharts() {
             try {
                 const competenze = calculateCompetenceAverages();
