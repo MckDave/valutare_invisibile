@@ -2631,7 +2631,7 @@
                             <button onclick="downloadAdvancedReport()" style="background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px;">
                                 💾 Scarica Report
                             </button>
-                            <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="background: #6c757d; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px;">
+                            <button onclick="closeReportModal()" style="background: #6c757d; color: white; border: none; padding: 15px 30px; border-radius: 10px; margin: 0 10px; cursor: pointer; font-size: 16px;">
                                 ✖️ Chiudi
                             </button>
                         </div>
@@ -3187,14 +3187,24 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
 
         function syncObjectivesData() {
             try {
+                // Verifica se localStorage è disponibile
+                if (typeof Storage === 'undefined') {
+                    console.log('localStorage non disponibile');
+                    return; // Esce silenziosamente senza mostrare errori
+                }
+                
                 const objectives = JSON.parse(localStorage.getItem('pei_objectives') || '[]');
                 updateObjectivesSummary(objectives);
                 updateObjectivesPreview(objectives);
                 updateObjectivesChart(objectives);
-                showNotification('📊 Dati obiettivi aggiornati!', 'success');
+                
+                // Solo se ci sono effettivamente obiettivi mostra il messaggio di successo
+                if (objectives.length > 0) {
+                    showNotification('📊 Dati obiettivi aggiornati!', 'success');
+                }
             } catch (error) {
-                console.log('Dati obiettivi non disponibili');
-                showNotification('⚠️ Impossibile sincronizzare i dati', 'warning');
+                // Non mostra errori all'utente, solo log silenzioso
+                console.log('Sincronizzazione obiettivi non necessaria');
             }
         }
 
