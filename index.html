@@ -3366,6 +3366,8 @@ function updateObjectivesChart(objectives) {
     
     if (objectives.length === 0) {
         // Mostra messaggio se non ci sono obiettivi
+        const canvas = document.getElementById('objectivesChart');
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#6c757d';
