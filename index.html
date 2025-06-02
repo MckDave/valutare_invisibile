@@ -1729,7 +1729,7 @@
 </style>
     </div>
 
-    <script>
+   <script>
         // Configurazione globale
         const levels = ['Iniziale', 'Base', 'Intermedio', 'Avanzato'];
         const levelColors = {
@@ -2731,26 +2731,165 @@
             return '<ul style="margin: 0; padding-left: 20px;">' + talents.map(t => `<li style="margin-bottom: 8px;">${t}</li>`).join('') + '</ul>';
         }
 
-        function downloadAdvancedReport() {
+        function downloadAdvancedReport(reportData = null) {
             try {
-                const reportData = {
-                    versione: '4.0',
-                    timestamp: new Date().toISOString(),
-                    studente: document.getElementById('studentName')?.value || 'Studente',
-                    competenze: calculateCompetenceAverages()
-                };
+                // Se non viene passato reportData, creiamo uno di base
+                if (!reportData) {
+                    const studentNameEl = document.getElementById('studentName');
+                    const disabilityTypeEl = document.getElementById('disabilityType');
+                    const dateEl = document.getElementById('currentDate');
+                    
+                    reportData = {
+                        versione: '4.0',
+                        timestamp: new Date().toISOString(),
+                        studente: studentNameEl ? (studentNameEl.value || 'Studente') : 'Studente',
+                        tipologiaDisabilita: disabilityTypeEl ? disabilityTypeEl.value : 'altra',
+                        dataOsservazione: dateEl ? dateEl.value : new Date().toISOString().split('T')[0],
+                        competenze: calculateCompetenceAverages(),
+                        feedbackFormativo: {
+                            feedUp: 'Obiettivi definiti nel sistema',
+                            feedBack: 'Progressi monitorati sistematicamente', 
+                            feedForward: 'Strategie di miglioramento personalizzate'
+                        },
+                        note: 'Report generato dal Sistema Valutativo Inclusivo "Valutare l\'Invisibile"'
+                    };
+                }
                 
-                const reportStr = JSON.stringify(reportData, null, 2);
-                const reportBlob = new Blob([reportStr], {type: 'application/json'});
+                // Validazione dati
+                if (!reportData.studente) {
+                    reportData.studente = 'Studente';
+                }
+                
+                // Genera contenuto report
+                const reportContent = generateReportContent(reportData);
+                
+                // Crea e scarica il file
+                const reportBlob = new Blob([reportContent], {type: 'text/html;charset=utf-8'});
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(reportBlob);
-                link.download = `report_inclusivo_${reportData.studente.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+                
+                // Nome file sicuro
+                const safeStudentName = reportData.studente.replace(/[^a-zA-Z0-9]/g, '_');
+                const dateStr = new Date().toISOString().split('T')[0];
+                link.download = `report_inclusivo_${safeStudentName}_${dateStr}.html`;
+                
+                // Trigger download
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
+                
+                // Cleanup URL
+                setTimeout(() => {
+                    URL.revokeObjectURL(link.href);
+                }, 1000);
                 
                 showNotification('📥 Report scaricato con successo!', 'success');
+                
             } catch (error) {
-                showNotification('❌ Errore nel download del report', 'error');
+                console.error('Errore download report:', error);
+                
+                // Fallback: copia negli appunti
+                try {
+                    const reportText = `REPORT VALUTATIVO INCLUSIVO
+Studente: ${reportData ? reportData.studente : 'N/D'}
+Data: ${new Date().toLocaleDateString('it-IT')}
+Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
+                    
+                    navigator.clipboard.writeText(reportText).then(() => {
+                        showNotification('📋 Report copiato negli appunti!', 'info');
+                    }).catch(() => {
+                        showNotification('⚠️ Impossibile scaricare. Usa il browser per salvare la pagina.', 'warning');
+                    });
+                } catch (fallbackError) {
+                    showNotification('⚠️ Impossibile scaricare. Usa il browser per salvare la pagina.', 'warning');
+                }
             }
+        }
+
+        function generateReportContent(reportData) {
+            const competenze = reportData.competenze || calculateCompetenceAverages();
+            
+            return `<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Valutativo - ${reportData.studente}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; color: #333; }
+        .header { text-align: center; border-bottom: 3px solid #3f51b5; padding-bottom: 20px; margin-bottom: 30px; }
+        .section { margin: 25px 0; padding: 20px; background: #f8f9fa; border-radius: 10px; }
+        .competenza { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }
+        .level { padding: 5px 15px; border-radius: 20px; color: white; font-weight: bold; }
+        .level-1 { background: #e74c3c; }
+        .level-2 { background: #f39c12; }
+        .level-3 { background: #f1c40f; color: #333; }
+        .level-4 { background: #27ae60; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee; font-size: 0.9em; color: #666; }
+        @media print { body { margin: 0; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Report Valutativo Inclusivo</h1>
+        <h2>"Valutare l'Invisibile"</h2>
+        <p><strong>Studente:</strong> ${reportData.studente}</p>
+        <p><strong>Data:</strong> ${new Date(reportData.dataOsservazione || Date.now()).toLocaleDateString('it-IT')}</p>
+        <p><strong>Tipologia:</strong> ${getTipologiaDescription(reportData.tipologiaDisabilita || 'altra')}</p>
+    </div>
+    
+    <div class="section">
+        <h3>📊 Profilo Competenze Trasversali</h3>
+        <div class="competenza">
+            <span><strong>🤝 Collaborazione:</strong></span>
+            <span class="level level-${Math.round(competenze.collaborazione)}">${competenze.collaborazione.toFixed(1)}/4</span>
+        </div>
+        <div class="competenza">
+            <span><strong>🎯 Autonomia:</strong></span>
+            <span class="level level-${Math.round(competenze.autonomia)}">${competenze.autonomia.toFixed(1)}/4</span>
+        </div>
+        <div class="competenza">
+            <span><strong>💪 Resilienza:</strong></span>
+            <span class="level level-${Math.round(competenze.resilienza)}">${competenze.resilienza.toFixed(1)}/4</span>
+        </div>
+        <div class="competenza">
+            <span><strong>🧠 Metacognizione:</strong></span>
+            <span class="level level-${Math.round(competenze.metacognizione)}">${competenze.metacognizione.toFixed(1)}/4</span>
+        </div>
+        <div class="competenza">
+            <span><strong>🎨 Creatività:</strong></span>
+            <span class="level level-${Math.round(competenze.creativita)}">${competenze.creativita.toFixed(1)}/4</span>
+        </div>
+        <div class="competenza">
+            <span><strong>💝 Socio-Emotive:</strong></span>
+            <span class="level level-${Math.round(competenze.socioemotive)}">${competenze.socioemotive.toFixed(1)}/4</span>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h3>🎯 Feedback Formativo</h3>
+        <p><strong>Feed Up (Obiettivi):</strong> ${reportData.feedbackFormativo?.feedUp || 'Da definire'}</p>
+        <p><strong>Feed Back (Progressi):</strong> ${reportData.feedbackFormativo?.feedBack || 'Da documentare'}</p>
+        <p><strong>Feed Forward (Prossimi passi):</strong> ${reportData.feedbackFormativo?.feedForward || 'Da pianificare'}</p>
+    </div>
+    
+    <div class="section">
+        <h3>💪 Punti di Forza</h3>
+        ${generateStrengthsList(competenze)}
+    </div>
+    
+    <div class="section">
+        <h3>🚀 Aree di Sviluppo</h3>
+        ${generateDevelopmentAreas(competenze)}
+    </div>
+    
+    <div class="footer">
+        <p><strong>Generato da:</strong> Sistema Valutativo Inclusivo "Valutare l'Invisibile" v4.0</p>
+        <p><strong>Data generazione:</strong> ${new Date().toLocaleString('it-IT')}</p>
+        <p><em>Basato sui principi di valutazione formativa di Black & Wiliam</em></p>
+    </div>
+</body>
+</html>`;
         }
 
         function collectDetailedData() {
