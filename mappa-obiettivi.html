@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mappa Obiettivi PEI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .student-info {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4facfe;
+        }
+
+        .student-info h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item strong {
+            color: #4facfe;
+            min-width: 100px;
+        }
+
+        .objectives-section {
+            margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 20px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .add-objective-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-objective-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .objectives-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .objective-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .objective-card:hover {
+            border-color: #4facfe;
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.1);
+        }
+
+        .objective-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .objective-title {
+            font-size: 1.2rem;
+            color: #2d3748;
+            font-weight: 600;
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-acquisito {
+            background: #48bb78;
+            color: white;
+        }
+
+        .status-consolidamento {
+            background: #ed8936;
+            color: white;
+        }
+
+        .status-emergente {
+            background: #ecc94b;
+            color: #2d3748;
+        }
+
+        .status-avvio {
+            background: #4299e1;
+            color: white;
+        }
+
+        .objective-description {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .objective-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4a5568;
+        }
+
+        .meta-icon {
+            font-size: 1.1rem;
+        }
+
+        .objective-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #3182ce;
+        }
+
+        .btn-delete {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #e53e3e;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 12px 25px;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 12px 25px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #4a5568;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Mappa Obiettivi PEI</h1>
+            <p>Sistema di gestione e monitoraggio degli obiettivi personalizzati</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Informazioni Studente -->
+            <div class="student-info">
+                <h3>📋 Informazioni Studente</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>👤 Nome:</strong>
+                        <span>Marco Rossi</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>🏫 Classe:</strong>
+                        <span>3A - Liceo Scientifico</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>📅 Anno Scolastico:</strong>
+                        <span>2024/2025</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>🔍 Tipologia:</strong>
+                        <span>Disabilità Intellettiva</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiche -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalObjectives">0</div>
+                    <div class="stat-label">Obiettivi Totali</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="achievedObjectives">0</div>
+                    <div class="stat-label">Acquisiti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="progressPercentage">0%</div>
+                    <div class="stat-label">Progresso</div>
+                </div>
+            </div>
+
+            <!-- Sezione Obiettivi -->
+            <div class="objectives-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        🎯 Obiettivi PEI
+                    </h2>
+                    <button class="add-objective-btn" onclick="openModal()">
+                        ➕ Aggiungi Obiettivo
+                    </button>
+                </div>
+
+                <div class="objectives-container" id="objectivesContainer">
+                    <!-- Gli obiettivi verranno inseriti qui dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal per aggiungere/modificare obiettivo -->
+    <div class="modal" id="objectiveModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nuovo Obiettivo PEI</h3>
+            </div>
+
+            <form id="objectiveForm">
+                <div class="form-group">
+                    <label class="form-label">Titolo Obiettivo *</label>
+                    <input type="text" class="form-input" id="objectiveTitle" required placeholder="Es: Migliorare la capacità di attenzione e concentrazione">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Descrizione Dettagliata</label>
+                    <textarea class="form-textarea" id="objectiveDescription" placeholder="Descrivi l'obiettivo in modo dettagliato, includendo metodologie e criteri di valutazione..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Area di Competenza *</label>
+                    <select class="form-select" id="objectiveArea" required>
+                        <option value="">Seleziona un'area</option>
+                        <option value="cognitiva">🧠 Area Cognitiva</option>
+                        <option value="comunicativa">💬 Area Comunicativa</option>
+                        <option value="sociale">👥 Area Sociale</option>
+                        <option value="autonomia">🎯 Autonomia Personale</option>
+                        <option value="motoria">🏃 Area Motoria</option>
+                        <option value="sensoriale">👁️ Area Sensoriale</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Livello Attuale *</label>
+                    <select class="form-select" id="objectiveStatus" required>
+                        <option value="">Seleziona livello</option>
+                        <option value="acquisito">🟢 Acquisito</option>
+                        <option value="consolidamento">🟡 In Consolidamento</option>
+                        <option value="emergente">🟠 Emergente</option>
+                        <option value="avvio">🔵 In Avvio</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Priorità</label>
+                    <select class="form-select" id="objectivePriority">
+                        <option value="alta">🔴 Alta</option>
+                        <option value="media" selected>🟡 Media</option>
+                        <option value="bassa">🟢 Bassa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Termine Previsto</label>
+                    <input type="date" class="form-input" id="objectiveDeadline">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annulla</button>
+                    <button type="submit" class="btn btn-primary">Salva Obiettivo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Gestione obiettivi
+        let objectives = [];
+        let editingIndex = -1;
+
+        // Storage compatibility layer
+        function saveToStorage(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                // Fallback per sandbox - usa memoria temporanea
+                console.log('LocalStorage non disponibile, usando memoria temporanea');
+            }
+        }
+
+        function loadFromStorage(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            } catch (e) {
+                // Fallback per sandbox
+                return null;
+            }
+        }
+
+        // Carica obiettivi salvati
+        function loadObjectives() {
+            const saved = loadFromStorage('pei_objectives');
+            if (saved) {
+                objectives = saved;
+                renderObjectives();
+                updateStats();
+            } else {
+                // Aggiungi alcuni obiettivi demo per la visualizzazione
+                addDemoObjectives();
+            }
+        }
+
+        // Salva obiettivi
+        function saveObjectives() {
+            saveToStorage('pei_objectives', objectives);
+        }
+
+        // Aggiungi obiettivi demo
+        function addDemoObjectives() {
+            objectives = [
+                {
+                    title: "Migliorare la capacità di attenzione e concentrazione",
+                    description: "Sviluppare la capacità di mantenere l'attenzione su un compito per almeno 15 minuti consecutivi",
+                    area: "cognitiva",
+                    status: "consolidamento",
+                    priority: "alta",
+                    deadline: "2025-03-15",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    title: "Potenziare le abilità comunicative verbali",
+                    description: "Incrementare il vocabolario attivo e migliorare la costruzione di frasi complete",
+                    area: "comunicativa",
+                    status: "emergente",
+                    priority: "alta",
+                    deadline: "2025-04-30",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    title: "Sviluppare l'autonomia nelle attività quotidiane",
+                    description: "Raggiungere l'indipendenza nella gestione dei materiali scolastici e nell'organizzazione del banco",
+                    area: "autonomia",
+                    status: "avvio",
+                    priority: "media",
+                    deadline: "2025-06-15",
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            renderObjectives();
+            updateStats();
+        }
+
+        // Mostra stato vuoto
+        function showEmptyState() {
+            const container = document.getElementById('objectivesContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎯</div>
+                    <h3>Nessun obiettivo definito</h3>
+                    <p>Inizia aggiungendo il primo obiettivo PEI per questo studente</p>
+                </div>
+            `;
+        }
+
+        // Renderizza obiettivi
+        function renderObjectives() {
+            const container = document.getElementById('objectivesContainer');
+            
+            if (objectives.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            container.innerHTML = objectives.map((obj, index) => `
+                <div class="objective-card">
+                    <div class="objective-header">
+                        <h4 class="objective-title">${obj.title}</h4>
+                        <span class="status-badge status-${obj.status}">
+                            ${getStatusLabel(obj.status)}
+                        </span>
+                    </div>
+                    
+                    ${obj.description ? `<div class="objective-description">${obj.description}</div>` : ''}
+                    
+                    <div class="objective-meta">
+                        <div class="meta-item">
+                            <span class="meta-icon">📚</span>
+                            <span>${getAreaLabel(obj.area)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-icon">⚡</span>
+                            <span>Priorità ${obj.priority}</span>
+                        </div>
+                        ${obj.deadline ? `
+                        <div class="meta-item">
+                            <span class="meta-icon">📅</span>
+                            <span>Scadenza: ${formatDate(obj.deadline)}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="objective-actions">
+                        <button class="btn btn-edit" onclick="editObjective(${index})">
+                            ✏️ Modifica
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteObjective(${index})">
+                            🗑️ Elimina
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Funzioni helper
+        function getStatusLabel(status) {
+            const labels = {
+                'acquisito': 'Acquisito',
+                'consolidamento': 'In Consolidamento',
+                'emergente': 'Emergente',
+                'avvio': 'In Avvio'
+            };
+            return labels[status] || status;
+        }
+
+        function getAreaLabel(area) {
+            const labels = {
+                'cognitiva': 'Area Cognitiva',
+                'comunicativa': 'Area Comunicativa',
+                'sociale': 'Area Sociale',
+                'autonomia': 'Autonomia Personale',
+                'motoria': 'Area Motoria',
+                'sensoriale': 'Area Sensoriale'
+            };
+            return labels[area] || area;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('it-IT');
+        }
+
+        // Aggiorna statistiche
+        function updateStats() {
+            const total = objectives.length;
+            const achieved = objectives.filter(obj => obj.status === 'acquisito').length;
+            const percentage = total > 0 ? Math.round((achieved / total) * 100) : 0;
+
+            document.getElementById('totalObjectives').textContent = total;
+            document.getElementById('achievedObjectives').textContent = achieved;
+            document.getElementById('progressPercentage').textContent = percentage + '%';
+        }
+
+        // Gestione modal
+        function openModal(index = -1) {
+            editingIndex = index;
+            const modal = document.getElementById('objectiveModal');
+            const form = document.getElementById('objectiveForm');
+            
+            if (index >= 0) {
+                // Modalità modifica
+                const obj = objectives[index];
+                document.getElementById('modalTitle').textContent = 'Modifica Obiettivo';
+                document.getElementById('objectiveTitle').value = obj.title;
+                document.getElementById('objectiveDescription').value = obj.description || '';
+                document.getElementById('objectiveArea').value = obj.area;
+                document.getElementById('objectiveStatus').value = obj.status;
+                document.getElementById('objectivePriority').value = obj.priority;
+                document.getElementById('objectiveDeadline').value = obj.deadline || '';
+            } else {
+                // Modalità nuovo
+                document.getElementById('modalTitle').textContent = 'Nuovo Obiettivo PEI';
+                form.reset();
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('objectiveModal');
+            modal.classList.remove('active');
+            editingIndex = -1;
+        }
+
+        // Gestione form
+        document.getElementById('objectiveForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const objective = {
+                title: document.getElementById('objectiveTitle').value,
+                description: document.getElementById('objectiveDescription').value,
+                area: document.getElementById('objectiveArea').value,
+                status: document.getElementById('objectiveStatus').value,
+                priority: document.getElementById('objectivePriority').value,
+                deadline: document.getElementById('objectiveDeadline').value,
+                createdAt: editingIndex >= 0 ? objectives[editingIndex].createdAt : new Date().toISOString()
+            };
+
+            if (editingIndex >= 0) {
+                objectives[editingIndex] = objective;
+            } else {
+                objectives.push(objective);
+            }
+
+            saveObjectives();
+            renderObjectives();
+            updateStats();
+            closeModal();
+        });
+
+        // Modifica obiettivo
+        function editObjective(index) {
+            openModal(index);
+        }
+
+        // Elimina obiettivo
+        function deleteObjective(index) {
+            if (confirm('Sei sicuro di voler eliminare questo obiettivo?')) {
+                objectives.splice(index, 1);
+                saveObjectives();
+                renderObjectives();
+                updateStats();
+            }
+        }
+
+        // Chiudi modal cliccando fuori
+        document.getElementById('objectiveModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            loadObjectives();
+        });
+    </script>
+</body>
+</html>
