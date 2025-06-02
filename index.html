@@ -977,64 +977,409 @@
                     </div>
                 </div>
                 
-                <!-- TAB DASHBOARD -->
-                <div id="tab-dashboard" class="tab-content">
-                    <h2>📈 Dashboard Completa</h2>
-                    
-                    <div class="summary-card">
-                        <h3>Riepilogo Generale - <span id="dashboard-student-name">Marco Rossi</span></h3>
-                        <div class="summary-grid">
-                            <div class="summary-item">
-                                <h4>Collaborazione</h4>
-                                <div class="value" id="summary-collab">2.3/4</div>
+      <!-- TAB DASHBOARD -->
+<div id="tab-dashboard" class="tab-content">
+    <h2>📈 Dashboard Completa</h2>
+    
+    <div class="summary-card">
+        <h3>Riepilogo Generale - <span id="dashboard-student-name">Marco Rossi</span></h3>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <h4>Collaborazione</h4>
+                <div class="value" id="summary-collab">2.3/4</div>
+            </div>
+            <div class="summary-item">
+                <h4>Autonomia</h4>
+                <div class="value" id="summary-auto">2.3/4</div>
+            </div>
+            <div class="summary-item">
+                <h4>Resilienza</h4>
+                <div class="value" id="summary-resil">2.3/4</div>
+            </div>
+            <div class="summary-item">
+                <h4>Metacognizione</h4>
+                <div class="value" id="summary-meta">1.8/4</div>
+            </div>
+            <div class="summary-item">
+                <h4>Creatività</h4>
+                <div class="value" id="summary-creat">2.3/4</div>
+            </div>
+            <div class="summary-item">
+                <h4>Socio-Emotive</h4>
+                <div class="value" id="summary-socio">2.5/4</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="charts-container">
+        <div class="chart-card">
+            <h4>Profilo Competenze Trasversali</h4>
+            <canvas id="radarChart" width="400" height="400"></canvas>
+        </div>
+        <div class="chart-card">
+            <h4>Andamento Temporale</h4>
+            <canvas id="lineChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    
+    <!-- ===== NUOVE SCALE PER DISABILITÀ INTELLETTIVE ===== -->
+    
+    <!-- Scale Microprogressi -->
+    <div class="charts-container">
+        <div class="chart-card full-width">
+            <h4>📈 Scale Microprogressi - Disabilità Intellettive</h4>
+            <div class="microprogressi-grid">
+                <div class="microprogresso-item">
+                    <h5>🎯 Attenzione e Concentrazione</h5>
+                    <div class="progress-scale">
+                        <div class="scale-steps">
+                            <div class="step active" data-step="1">1</div>
+                            <div class="step active" data-step="2">2</div>
+                            <div class="step active" data-step="3">3</div>
+                            <div class="step" data-step="4">4</div>
+                            <div class="step" data-step="5">5</div>
+                        </div>
+                        <div class="step-labels">
+                            <span>Iniziale</span>
+                            <span>Base</span>
+                            <span>Intermedio</span>
+                            <span>Avanzato</span>
+                            <span>Eccellente</span>
+                        </div>
+                        <div class="current-level">Livello: 3/5 - Intermedio</div>
+                    </div>
+                </div>
+                
+                <div class="microprogresso-item">
+                    <h5>🧠 Memoria di Lavoro</h5>
+                    <div class="progress-scale">
+                        <div class="scale-steps">
+                            <div class="step active" data-step="1">1</div>
+                            <div class="step active" data-step="2">2</div>
+                            <div class="step" data-step="3">3</div>
+                            <div class="step" data-step="4">4</div>
+                            <div class="step" data-step="5">5</div>
+                        </div>
+                        <div class="step-labels">
+                            <span>Iniziale</span>
+                            <span>Base</span>
+                            <span>Intermedio</span>
+                            <span>Avanzato</span>
+                            <span>Eccellente</span>
+                        </div>
+                        <div class="current-level">Livello: 2/5 - Base</div>
+                    </div>
+                </div>
+                
+                <div class="microprogresso-item">
+                    <h5>📝 Organizzazione del Compito</h5>
+                    <div class="progress-scale">
+                        <div class="scale-steps">
+                            <div class="step active" data-step="1">1</div>
+                            <div class="step active" data-step="2">2</div>
+                            <div class="step active" data-step="3">3</div>
+                            <div class="step active" data-step="4">4</div>
+                            <div class="step" data-step="5">5</div>
+                        </div>
+                        <div class="step-labels">
+                            <span>Iniziale</span>
+                            <span>Base</span>
+                            <span>Intermedio</span>
+                            <span>Avanzato</span>
+                            <span>Eccellente</span>
+                        </div>
+                        <div class="current-level">Livello: 4/5 - Avanzato</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scale Autonomia Funzionale -->
+    <div class="charts-container">
+        <div class="chart-card full-width">
+            <h4>🎯 Autonomia Funzionale Progressiva</h4>
+            <div class="autonomia-grid">
+                <div class="autonomia-area">
+                    <h5>🏠 Autonomia Personale</h5>
+                    <div class="autonomia-levels">
+                        <div class="level-row">
+                            <span class="level-label">Cura di sé</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 75%"></div>
+                                <span class="level-text">75% - Autonomo con supervisione</span>
                             </div>
-                            <div class="summary-item">
-                                <h4>Autonomia</h4>
-                                <div class="value" id="summary-auto">2.3/4</div>
+                        </div>
+                        <div class="level-row">
+                            <span class="level-label">Gestione materiali</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 60%"></div>
+                                <span class="level-text">60% - Richiede supporto parziale</span>
                             </div>
-                            <div class="summary-item">
-                                <h4>Resilienza</h4>
-                                <div class="value" id="summary-resil">2.3/4</div>
-                            </div>
-                            <div class="summary-item">
-                                <h4>Metacognizione</h4>
-                                <div class="value" id="summary-meta">1.8/4</div>
-                            </div>
-                            <div class="summary-item">
-                                <h4>Creatività</h4>
-                                <div class="value" id="summary-creat">2.3/4</div>
-                            </div>
-                            <div class="summary-item">
-                                <h4>Socio-Emotive</h4>
-                                <div class="value" id="summary-socio">2.5/4</div>
+                        </div>
+                        <div class="level-row">
+                            <span class="level-label">Orientamento spaziale</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 80%"></div>
+                                <span class="level-text">80% - Quasi autonomo</span>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="charts-container">
-                        <div class="chart-card">
-                            <h4>Profilo Competenze Trasversali</h4>
-                            <canvas id="radarChart" width="400" height="400"></canvas>
+                </div>
+                
+                <div class="autonomia-area">
+                    <h5>📚 Autonomia Scolastica</h5>
+                    <div class="autonomia-levels">
+                        <div class="level-row">
+                            <span class="level-label">Seguire istruzioni</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 65%"></div>
+                                <span class="level-text">65% - Richiede rinforzi</span>
+                            </div>
                         </div>
-                        <div class="chart-card">
-                            <h4>Andamento Temporale</h4>
-                            <canvas id="lineChart" width="400" height="400"></canvas>
+                        <div class="level-row">
+                            <span class="level-label">Gestione tempi</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 50%"></div>
+                                <span class="level-text">50% - Supporto strutturato</span>
+                            </div>
+                        </div>
+                        <div class="level-row">
+                            <span class="level-label">Autoregolazione</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 55%"></div>
+                                <span class="level-text">55% - In sviluppo</span>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="charts-container">
-                        <div class="chart-card">
-                            <h4>Progressi Obiettivi PEI</h4>
-                            <canvas id="objectivesChart" width="400" height="400"></canvas>
+                </div>
+                
+                <div class="autonomia-area">
+                    <h5>👥 Autonomia Sociale</h5>
+                    <div class="autonomia-levels">
+                        <div class="level-row">
+                            <span class="level-label">Interazione pari</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 70%"></div>
+                                <span class="level-text">70% - Buona socializzazione</span>
+                            </div>
                         </div>
-                        <div class="chart-card">
-                            <h4>Distribuzione Livelli</h4>
-                            <canvas id="levelsChart" width="400" height="400"></canvas>
+                        <div class="level-row">
+                            <span class="level-label">Comunicazione bisogni</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 85%"></div>
+                                <span class="level-text">85% - Comunicazione efficace</span>
+                            </div>
+                        </div>
+                        <div class="level-row">
+                            <span class="level-label">Rispetto regole</span>
+                            <div class="level-progress">
+                                <div class="progress-bar" style="width: 75%"></div>
+                                <span class="level-text">75% - Buona compliance</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    
+    <!-- ===== FINE NUOVE SCALE ===== -->
+    
+    <div class="charts-container">
+        <div class="chart-card">
+            <h4>Progressi Obiettivi PEI</h4>
+            <canvas id="objectivesChart" width="400" height="400"></canvas>
+        </div>
+        <div class="chart-card">
+            <h4>Distribuzione Livelli</h4>
+            <canvas id="levelsChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Stili per le nuove scale */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.microprogressi-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.microprogresso-item {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #d1e7dd;
+}
+
+.microprogresso-item h5 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.progress-scale {
+    text-align: center;
+}
+
+.scale-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #6c757d;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.step.active {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.step-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.current-level {
+    background: #d4edda;
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: #155724;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.autonomia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 15px;
+}
+
+.autonomia-area {
+    background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #ffc107;
+}
+
+.autonomia-area h5 {
+    margin: 0 0 20px 0;
+    color: #856404;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+.autonomia-levels {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.level-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    gap: 15px;
+}
+
+.level-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9em;
+}
+
+.level-progress {
+    position: relative;
+    background: #e9ecef;
+    border-radius: 10px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.level-text {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    color: #495057;
+    font-size: 0.8em;
+    font-weight: 600;
+    z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .microprogressi-grid,
+    .autonomia-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .level-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .scale-steps {
+        gap: 5px;
+    }
+    
+    .step {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9em;
+    }
+}
+</style>
     </div>
 
     <script>
