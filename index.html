@@ -3360,7 +3360,6 @@ function updateObjectivesPreview(objectives) {
         </div>` : '');
 }
 
-        /*
 function updateObjectivesChart(objectives) {
     const canvas = document.getElementById('objectivesChart');
     if (!canvas) return;
@@ -3512,15 +3511,6 @@ function hideLegend() {
         legendContainer.innerHTML = '';
     }
 }
-    */
-        
-    // Calcola le statistiche per i grafici
-    const statusCounts = {
-        'acquisito': 0,
-        'consolidamento': 0,
-        'emergente': 0,
-        'avvio': 0
-    };
     
     objectives.forEach(obj => {
         if (statusCounts.hasOwnProperty(obj.status)) {
