@@ -822,6 +822,90 @@
     .stat-number {
         font-size: 1.5rem;
     }
+
+    .chart-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.legend-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.legend-item.legend-disabled {
+    opacity: 0.5;
+}
+
+.legend-item.legend-disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.legend-label {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.legend-text {
+    font-weight: 500;
+    color: #2d3748;
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+.legend-value {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/* Responsive per la legenda */
+@media (max-width: 768px) {
+    .chart-legend {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 15px;
+        padding: 12px;
+    }
+    
+    .legend-item {
+        padding: 10px;
+    }
+    
+    .legend-text {
+        font-size: 0.85rem;
+    }
+    
+    .legend-value {
+        font-size: 0.75rem;
+    }
 }       
     </style>
 </head>
@@ -3287,9 +3371,146 @@ function updateObjectivesChart(objectives) {
         ctx.fillStyle = '#6c757d';
         ctx.font = '16px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('Nessun dato disponibile', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
+        ctx.font = '12px Arial';
+        ctx.fillText('Aggiungi obiettivi per vedere il grafico', canvas.width / 2, canvas.height / 2 + 10);
+        
+        // Nasconde la legenda se esiste
+        hideLegend();
         return;
     }
+    
+    // Calcola le statistiche per i grafici
+    const statusCounts = {
+        'acquisito': 0,
+        'consolidamento': 0,
+        'emergente': 0,
+        'avvio': 0
+    };
+    
+    objectives.forEach(obj => {
+        if (statusCounts.hasOwnProperty(obj.status)) {
+            statusCounts[obj.status]++;
+        }
+    });
+    
+    // Dati per il grafico
+    const data = [
+        { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
+        { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
+        { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
+        { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
+    ];
+    
+    // Filtra solo i dati con valore > 0 per il grafico
+    const activeData = data.filter(d => d.value > 0);
+    
+    if (activeData.length === 0) {
+        updateObjectivesChart([]); // Ricorsione per mostrare messaggio vuoto
+        return;
+    }
+    
+    // Crea grafico a ciambella
+    drawDonutChart(canvas, activeData, objectives.length);
+    
+    // Crea legenda
+    createLegend(data, objectives.length);
+}
+
+function drawDonutChart(canvas, data, total) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const outerRadius = Math.min(centerX, centerY) - 20;
+    const innerRadius = outerRadius * 0.6;
+    
+    let currentAngle = -Math.PI / 2; // Inizia dall'alto
+    
+    data.forEach(item => {
+        const sliceAngle = (item.value / total) * 2 * Math.PI;
+        
+        // Disegna slice
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, outerRadius, currentAngle, currentAngle + sliceAngle);
+        ctx.arc(centerX, centerY, innerRadius, currentAngle + sliceAngle, currentAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = item.color;
+        ctx.fill();
+        
+        // Disegna etichetta con valore
+        if (item.value > 0) {
+            const labelAngle = currentAngle + sliceAngle / 2;
+            const labelRadius = (outerRadius + innerRadius) / 2;
+            const labelX = centerX + Math.cos(labelAngle) * labelRadius;
+            const labelY = centerY + Math.sin(labelAngle) * labelRadius;
+            
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Ombra per il testo
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 2;
+            ctx.fillText(item.value, labelX, labelY);
+            ctx.shadowBlur = 0;
+        }
+        
+        currentAngle += sliceAngle;
+    });
+    
+    // Testo centrale con totale
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(total, centerX, centerY - 5);
+    
+    ctx.font = '12px Arial';
+    ctx.fillStyle = '#666';
+    ctx.fillText('Obiettivi', centerX, centerY + 15);
+}
+
+function createLegend(data, total) {
+    // Trova o crea il contenitore della legenda
+    let legendContainer = document.getElementById('chartLegend');
+    if (!legendContainer) {
+        legendContainer = document.createElement('div');
+        legendContainer.id = 'chartLegend';
+        legendContainer.className = 'chart-legend';
+        
+        // Inserisce la legenda dopo il canvas
+        const chartContainer = document.querySelector('.chart-container');
+        if (chartContainer && chartContainer.parentNode) {
+            chartContainer.parentNode.insertBefore(legendContainer, chartContainer.nextSibling);
+        }
+    }
+    
+    // Genera HTML della legenda
+    const legendHTML = data.map(item => {
+        const percentage = total > 0 ? Math.round((item.value / total) * 100) : 0;
+        return `
+            <div class="legend-item ${item.value === 0 ? 'legend-disabled' : ''}">
+                <div class="legend-color" style="background-color: ${item.color}"></div>
+                <div class="legend-label">
+                    <span class="legend-text">${item.label}</span>
+                    <span class="legend-value">${item.value} (${percentage}%)</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    legendContainer.innerHTML = legendHTML;
+}
+
+function hideLegend() {
+    const legendContainer = document.getElementById('chartLegend');
+    if (legendContainer) {
+        legendContainer.innerHTML = '';
+    }
+}
     
     // Calcola le statistiche per i grafici
     const statusCounts = {
