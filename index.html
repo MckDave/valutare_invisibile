@@ -27,7 +27,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Valutativo Inclusivo - Valutare l'Invisibile</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -2044,260 +2043,75 @@ Lo studente ha sviluppato maggiore consapevolezza delle proprie strategie effica
                     });
                 }
                 
-// Objectives Chart - VERSIONE MIGLIORATA con etichette e tooltip
-const objectivesCtx = document.getElementById('objectivesChart');
-if (objectivesCtx && typeof Chart !== 'undefined') {
-    charts.objectives = new Chart(objectivesCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Acquisito', 'In Consolidamento', 'Emergente', 'Non Emerso'],
-            datasets: [{
-                data: [25, 50, 20, 5],
-                backgroundColor: ['#28a745', '#fd7e14', '#ffc107', '#e9ecef'],
-                borderWidth: 3,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { 
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        usePointStyle: true,
-                        font: {
-                            size: 12,
-                            weight: 'bold'
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} obiettivi (${percentage}%)`;
+ // Objectives Chart
+                const objectivesCtx = document.getElementById('objectivesChart');
+                if (objectivesCtx && typeof Chart !== 'undefined') {
+                    charts.objectives = new Chart(objectivesCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Acquisito', 'In Consolidamento', 'Emergente', 'Non Emerso'],
+                            datasets: [{
+                                data: [25, 50, 20, 5],
+                                backgroundColor: ['
+#28a745', '
+#fd7e14', '
+#ffc107', '
+#e9ecef'],
+                                borderWidth: 2,
+                                borderColor: '#fff'
+                            }]
                         },
-                        afterLabel: function(context) {
-                            // Descrizioni aggiuntive per ogni categoria
-                            const descriptions = {
-                                'Acquisito': '✅ Obiettivi pienamente raggiunti',
-                                'In Consolidamento': '🔄 Obiettivi in fase di rinforzo',
-                                'Emergente': '🌱 Obiettivi in sviluppo iniziale',
-                                'Non Emerso': '⏳ Obiettivi non ancora avviati'
-                            };
-                            return descriptions[context.label] || '';
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { position: 'bottom' }
+                            }
                         }
-                    },
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#fff',
-                    borderWidth: 1,
-                    cornerRadius: 8,
-                    displayColors: true,
-                    bodyFont: {
-                        size: 13
-                    },
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
-                    }
-                },
-                // Plugin personalizzato per mostrare percentuali sui settori
-                datalabels: {
-                    color: '#fff',
-                    font: {
-                        weight: 'bold',
-                        size: 14
-                    },
-                    formatter: function(value, context) {
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = ((value / total) * 100).toFixed(1);
-                        return percentage > 5 ? `${percentage}%` : ''; // Nascondi percentuali troppo piccole
-                    },
-                    textAlign: 'center'
+                    });
                 }
-            },
-            // Configurazione per le etichette al centro
-            elements: {
-                arc: {
-                    borderWidth: 3
-                }
-            }
-        },
-        plugins: [{
-            // Plugin personalizzato per testo centrale
-            id: 'centerText',
-            beforeDraw: function(chart) {
-                const width = chart.width;
-                const height = chart.height;
-                const ctx = chart.ctx;
-                
-                ctx.restore();
-                const fontSize = (height / 250).toFixed(2);
-                ctx.font = `bold ${fontSize}em Arial`;
-                ctx.textBaseline = 'middle';
-                ctx.fillStyle = '#495057';
-                
-                const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                const centerText = `${total}`;
-                const subText = 'Obiettivi Totali';
-                
-                const textX = Math.round((width - ctx.measureText(centerText).width) / 2);
-                const textY = height / 2 - 10;
-                
-                ctx.fillText(centerText, textX, textY);
-                
-                ctx.font = `${fontSize * 0.6}em Arial`;
-                ctx.fillStyle = '#6c757d';
-                const subTextX = Math.round((width - ctx.measureText(subText).width) / 2);
-                ctx.fillText(subText, subTextX, textY + 20);
-                
-                ctx.save();
-            }
-        }]
-    });
-}
 
-// Levels Chart - VERSIONE MIGLIORATA con valori e tooltip
-const levelsCtx = document.getElementById('levelsChart');
-if (levelsCtx && typeof Chart !== 'undefined') {
-    charts.levels = new Chart(levelsCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Iniziale', 'Base', 'Intermedio', 'Avanzato'],
-            datasets: [{
-                label: 'Numero di Competenze',
-                data: [1, 15, 8, 0],
-                backgroundColor: ['#e74c3c', '#f39c12', '#f1c40f', '#27ae60'],
-                borderWidth: 2,
-                borderColor: '#fff',
-                borderRadius: 8,
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { 
-                        stepSize: 1,
-                        font: {
-                            size: 12,
-                            weight: '500'
+                // Levels Chart
+                const levelsCtx = document.getElementById('levelsChart');
+                if (levelsCtx && typeof Chart !== 'undefined') {
+                    charts.levels = new Chart(levelsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Iniziale', 'Base', 'Intermedio', 'Avanzato'],
+                            datasets: [{
+                                label: 'Numero di Competenze',
+                                data: [1, 15, 8, 0],
+                                backgroundColor: ['
+#e74c3c', '
+#f39c12', '
+#f1c40f', '
+#27ae60'],
+                                borderWidth: 1,
+                                borderColor: '#fff'
+                            }]
                         },
-                        color: '#495057'
-                    },
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)',
-                        lineWidth: 1
-                    },
-                    title: {
-                        display: true,
-                        text: 'Numero di Competenze',
-                        font: {
-                            size: 13,
-                            weight: 'bold'
-                        },
-                        color: '#495057'
-                    }
-                },
-                x: {
-                    ticks: {
-                        font: {
-                            size: 12,
-                            weight: '600'
-                        },
-                        color: '#495057'
-                    },
-                    grid: {
-                        display: false
-                    }
-                }
-            },
-            plugins: {
-                legend: { 
-                    display: false 
-                },
-                tooltip: {
-                    callbacks: {
-                        title: function(context) {
-                            return `Livello: ${context[0].label}`;
-                        },
-                        label: function(context) {
-                            const value = context.parsed.y;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
-                            return `${value} competenze (${percentage}% del totale)`;
-                        },
-                        afterLabel: function(context) {
-                            const descriptions = {
-                                'Iniziale': '🔴 Competenze in fase iniziale di sviluppo',
-                                'Base': '🟡 Competenze acquisite a livello basilare',
-                                'Intermedio': '🟠 Competenze consolidate e sicure',
-                                'Avanzato': '🟢 Competenze eccellenti e trasferibili'
-                            };
-                            return descriptions[context.label] || '';
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { stepSize: 1 }
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false }
+                            }
                         }
-                    },
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#fff',
-                    borderWidth: 1,
-                    cornerRadius: 8,
-                    bodyFont: {
-                        size: 13
-                    },
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
-                    }
-                },
-                // Plugin per etichette sui valori delle barre
-                datalabels: {
-                    anchor: 'end',
-                    align: 'top',
-                    color: '#495057',
-                    font: {
-                        weight: 'bold',
-                        size: 14
-                    },
-                    formatter: function(value) {
-                        return value > 0 ? value : ''; // Mostra solo valori > 0
-                    },
-                    padding: 4
+                    });
                 }
-            },
-            animation: {
-                duration: 1500,
-                easing: 'easeOutBounce'
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index'
+            } catch (error) {
+                console.log('Chart.js non disponibile o errore nell\'inizializzazione grafici:', error);
+                showNotification('⚠️ Grafici non disponibili. Chart.js richiesto.', 'warning');
             }
         }
-    });
-}
 
-// ===== SCRIPT AGGIUNTIVO PER CHART.JS DATALABELS =====
-// Aggiungi questo CDN nell'head del tuo HTML se non è già presente:
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
-
-// Registra il plugin per le etichette
-if (typeof Chart !== 'undefined' && Chart.register) {
-    try {
-        Chart.register(ChartDataLabels);
-    } catch (e) {
-        console.log('Plugin ChartDataLabels non disponibile, usando solo tooltip');
-    }
-}
+        function updateCharts() {
+            try {
+                const competenze = calculateCompetenceAverages();
                 
                 // Aggiorna radar chart
                 if (charts.radar) {
