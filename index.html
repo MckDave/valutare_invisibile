@@ -1717,7 +1717,7 @@
         <div class="chart-card">
     <h4>🎯 Progressi Obiettivi PEI</h4>
     <div style="height: 300px; position: relative;">
-        <canvas id="objectivesChart" width="400" height="300"></canvas>
+        <canvas id="dashboardObjectivesChart" width="400" height="300"></canvas>
     </div>
     <!-- Insights Migliorati -->
     <div class="enhanced-insights">
@@ -2556,7 +2556,7 @@ let currentDetailedFilter = 'all';
                 }
                 
                 // Objectives Chart
-                const objectivesCtx = document.getElementById('objectivesChart');
+                const objectivesCtx = document.getElementById('dashboardObjectivesChart');
                 if (objectivesCtx && typeof Chart !== 'undefined') {
                     charts.objectives = new Chart(objectivesCtx, {
                         type: 'doughnut',
@@ -3488,49 +3488,143 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
         }
 
         function updateObjectivesChart(objectives) {
-            const canvas = document.getElementById('objectivesChart');
-            if (!canvas) return;
-            
-            if (objectives.length === 0) {
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#6c757d';
-                ctx.font = '16px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
-                ctx.font = '12px Arial';
-                ctx.fillText('Aggiungi obiettivi per vedere il grafico', canvas.width / 2, canvas.height / 2 + 10);
-                return;
-            }
-            
-            // Calcola le statistiche
-            const statusCounts = {
-                'acquisito': 0,
-                'consolidamento': 0,
-                'emergente': 0,
-                'avvio': 0
-            };
-            
-            objectives.forEach(obj => {
-                if (statusCounts.hasOwnProperty(obj.status)) {
-                    statusCounts[obj.status]++;
-                }
-            });
-            
-            const data = [
-                { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
-                { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
-                { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
-                { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
-            ];
-            
-            const activeData = data.filter(d => d.value > 0);
-            
-            if (activeData.length > 0) {
-                drawDonutChart(canvas, activeData, objectives.length);
-            }
-        }
+    // Aggiorna il grafico nel TAB OBIETTIVI (Distribuzione Livelli)
+    const tabCanvas = document.getElementById('objectivesTabChart');
+    if (tabCanvas) {
+        updateTabChart(tabCanvas, objectives);
+    }
+    
+    // Aggiorna il grafico nel DASHBOARD (Progressi Obiettivi PEI)
+    const dashboardCanvas = document.getElementById('dashboardObjectivesChart');
+    if (dashboardCanvas) {
+        updateDashboardChart(dashboardCanvas, objectives);
+    }
+}
 
+// Funzione per il grafico del tab obiettivi (grafico a barre)
+function updateTabChart(canvas, objectives) {
+    if (objectives.length === 0) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#6c757d';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
+        ctx.font = '11px Arial';
+        ctx.fillText('Aggiungi obiettivi per vedere la distribuzione', canvas.width / 2, canvas.height / 2 + 10);
+        return;
+    }
+    
+    // Calcola le statistiche
+    const statusCounts = {
+        'acquisito': 0,
+        'consolidamento': 0,
+        'emergente': 0,
+        'avvio': 0
+    };
+    
+    objectives.forEach(obj => {
+        if (statusCounts.hasOwnProperty(obj.status)) {
+            statusCounts[obj.status]++;
+        }
+    });
+    
+    const data = [
+        { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
+        { label: 'Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
+        { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
+        { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
+    ];
+    
+    // Disegna grafico a barre
+    drawBarChart(canvas, data);
+}
+
+// Funzione per il grafico del dashboard (grafico a ciambella)
+function updateDashboardChart(canvas, objectives) {
+    if (objectives.length === 0) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#6c757d';
+        ctx.font = '16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
+        ctx.font = '12px Arial';
+        ctx.fillText('Aggiungi obiettivi per vedere il progresso', canvas.width / 2, canvas.height / 2 + 10);
+        return;
+    }
+    
+    // Calcola le statistiche
+    const statusCounts = {
+        'acquisito': 0,
+        'consolidamento': 0,
+        'emergente': 0,
+        'avvio': 0
+    };
+    
+    objectives.forEach(obj => {
+        if (statusCounts.hasOwnProperty(obj.status)) {
+            statusCounts[obj.status]++;
+        }
+    });
+    
+    const data = [
+        { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
+        { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
+        { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
+        { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
+    ];
+    
+    const activeData = data.filter(d => d.value > 0);
+    
+    if (activeData.length > 0) {
+        drawDonutChart(canvas, activeData, objectives.length);
+    }
+}
+
+// Funzione per disegnare grafico a barre (per il tab obiettivi)
+function drawBarChart(canvas, data) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const padding = 40;
+    const chartWidth = canvas.width - (padding * 2);
+    const chartHeight = canvas.height - (padding * 2);
+    const barWidth = Math.min(60, chartWidth / data.length - 20);
+    const maxValue = Math.max(...data.map(d => d.value), 1);
+    
+    // Posizione iniziale centrata
+    const totalBarsWidth = (barWidth + 20) * data.length - 20;
+    const startX = (canvas.width - totalBarsWidth) / 2;
+    
+    data.forEach((item, index) => {
+        if (item.value === 0) return;
+        
+        const barHeight = (item.value / maxValue) * (chartHeight - 30);
+        const x = startX + (index * (barWidth + 20));
+        const y = padding + (chartHeight - 30) - barHeight;
+        
+        // Disegna barra
+        ctx.fillStyle = item.color;
+        ctx.fillRect(x, y, barWidth, barHeight);
+        
+        // Etichetta valore sopra la barra
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(item.value, x + barWidth/2, y - 5);
+        
+        // Etichetta categoria sotto la barra
+        ctx.fillStyle = '#666';
+        ctx.font = '11px Arial';
+        ctx.textAlign = 'center';
+        
+        const words = item.label.split(' ');
+        words.forEach((word, wordIndex) => {
+            ctx.fillText(word, x + barWidth/2, padding + chartHeight - 15 + (wordIndex * 12));
+        });
+    });
+}
         function drawDonutChart(canvas, data, total) {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -3669,7 +3763,127 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
             }
         }
 
-        // Aggiungi CSS per le animazioni
+                // Funzione per il grafico del tab obiettivi (grafico a barre)
+        function updateTabChart(canvas, objectives) {
+            if (objectives.length === 0) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#6c757d';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
+                ctx.font = '11px Arial';
+                ctx.fillText('Aggiungi obiettivi per vedere la distribuzione', canvas.width / 2, canvas.height / 2 + 10);
+                return;
+            }
+            
+            const statusCounts = {
+                'acquisito': 0,
+                'consolidamento': 0,
+                'emergente': 0,
+                'avvio': 0
+            };
+            
+            objectives.forEach(obj => {
+                if (statusCounts.hasOwnProperty(obj.status)) {
+                    statusCounts[obj.status]++;
+                }
+            });
+            
+            const data = [
+                { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
+                { label: 'Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
+                { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
+                { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
+            ];
+            
+            drawBarChart(canvas, data);
+        }
+
+        // Funzione per il grafico del dashboard
+        function updateDashboardChart(canvas, objectives) {
+            if (objectives.length === 0) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#6c757d';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
+                ctx.font = '12px Arial';
+                ctx.fillText('Aggiungi obiettivi per vedere il progresso', canvas.width / 2, canvas.height / 2 + 10);
+                return;
+            }
+            
+            const statusCounts = {
+                'acquisito': 0,
+                'consolidamento': 0,
+                'emergente': 0,
+                'avvio': 0
+            };
+            
+            objectives.forEach(obj => {
+                if (statusCounts.hasOwnProperty(obj.status)) {
+                    statusCounts[obj.status]++;
+                }
+            });
+            
+            const data = [
+                { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
+                { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
+                { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
+                { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
+            ];
+            
+            const activeData = data.filter(d => d.value > 0);
+            
+            if (activeData.length > 0) {
+                drawDonutChart(canvas, activeData, objectives.length);
+            }
+        }
+
+        // Funzione per disegnare grafico a barre
+        function drawBarChart(canvas, data) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 40;
+            const chartWidth = canvas.width - (padding * 2);
+            const chartHeight = canvas.height - (padding * 2);
+            const barWidth = Math.min(60, chartWidth / data.length - 20);
+            const maxValue = Math.max(...data.map(d => d.value), 1);
+            
+            const totalBarsWidth = (barWidth + 20) * data.length - 20;
+            const startX = (canvas.width - totalBarsWidth) / 2;
+            
+            data.forEach((item, index) => {
+                if (item.value === 0) return;
+                
+                const barHeight = (item.value / maxValue) * (chartHeight - 30);
+                const x = startX + (index * (barWidth + 20));
+                const y = padding + (chartHeight - 30) - barHeight;
+                
+                ctx.fillStyle = item.color;
+                ctx.fillRect(x, y, barWidth, barHeight);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(item.value, x + barWidth/2, y - 5);
+                
+                ctx.fillStyle = '#666';
+                ctx.font = '11px Arial';
+                ctx.textAlign = 'center';
+                
+                const words = item.label.split(' ');
+                words.forEach((word, wordIndex) => {
+                    ctx.fillText(word, x + barWidth/2, padding + chartHeight - 15 + (wordIndex * 12));
+                });
+            });
+        }
+        
+        // ========== FINE NUOVE FUNZIONI ==========
+
+        // Aggiungi CSS per le animazioni (questo c'è già nel tuo file)
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
@@ -3685,7 +3899,6 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
             }
         `;
         document.head.appendChild(style);
-
        // ========== NUOVE FUNZIONI PER LISTA DETTAGLIATA OBIETTIVI ==========
         
         // Funzione per renderizzare la lista dettagliata
