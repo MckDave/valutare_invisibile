@@ -1715,13 +1715,40 @@
     
     <div class="charts-container">
         <div class="chart-card">
-            <h4>Progressi Obiettivi PEI</h4>
-            <canvas id="objectivesChart" width="400" height="400"></canvas>
+    <h4>🎯 Progressi Obiettivi PEI</h4>
+    <div style="height: 300px; position: relative;">
+        <canvas id="objectivesChart" width="400" height="300"></canvas>
+    </div>
+    <!-- AGGIUNTA SEZIONE INSIGHTS -->
+    <!-- Insights Migliorati -->
+    <div class="enhanced-insights">
+        <h5 style="color: #2980b9; margin-bottom: 10px;">💡 Insights Automatici</h5>
+        <div id="enhancedInsights">
+            <!-- Popolato dinamicamente -->
         </div>
+    </div>
+</div>
         <div class="chart-card">
             <h4>Distribuzione Livelli</h4>
             <canvas id="levelsChart" width="400" height="400"></canvas>
         </div>
+    </div>
+</div>
+                <div class="objectives-detailed-section">
+    <h4 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">📋 Obiettivi Specifici PEI</h4>
+    
+    <!-- Filtri -->
+    <div class="filter-tabs">
+        <div class="filter-tab active" onclick="filterDetailedObjectives('all')">Tutti</div>
+        <div class="filter-tab" onclick="filterDetailedObjectives('acquisito')">Acquisiti</div>
+        <div class="filter-tab" onclick="filterDetailedObjectives('consolidamento')">In Consol.</div>
+        <div class="filter-tab" onclick="filterDetailedObjectives('emergente')">Emergenti</div>
+        <div class="filter-tab" onclick="filterDetailedObjectives('avvio')">In Avvio</div>
+    </div>
+    
+    <!-- Lista obiettivi -->
+    <div id="detailedObjectivesList" style="max-height: 400px; overflow-y: auto;">
+        <!-- Popolata dinamicamente -->
     </div>
 </div>
 
