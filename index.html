@@ -906,6 +906,186 @@
     .legend-value {
         font-size: 0.75rem;
     }
+    .objectives-detailed-section {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    padding: 8px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.filter-tab.active {
+    border-color: #4facfe;
+    background: #4facfe;
+    color: white;
+}
+
+.filter-tab:hover {
+    border-color: #4facfe;
+    transform: translateY(-1px);
+}
+
+.objective-item-detailed {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 5px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.objective-item-detailed:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.objective-item-detailed.status-acquisito {
+    border-left-color: #28a745;
+    background: linear-gradient(90deg, rgba(40, 167, 69, 0.05) 0%, white 100%);
+}
+
+.objective-item-detailed.status-consolidamento {
+    border-left-color: #fd7e14;
+    background: linear-gradient(90deg, rgba(253, 126, 20, 0.05) 0%, white 100%);
+}
+
+.objective-item-detailed.status-emergente {
+    border-left-color: #ffc107;
+    background: linear-gradient(90deg, rgba(255, 193, 7, 0.05) 0%, white 100%);
+}
+
+.objective-item-detailed.status-avvio {
+    border-left-color: #007bff;
+    background: linear-gradient(90deg, rgba(0, 123, 255, 0.05) 0%, white 100%);
+}
+
+.objective-header-detailed {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    gap: 15px;
+}
+
+.objective-title-detailed {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1rem;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.objective-status-detailed {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.objective-meta-detailed {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.meta-item-detailed {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.objective-description-detailed {
+    color: #495057;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e9ecef;
+}
+
+.progress-indicator-detailed {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.progress-indicator-detailed.acquisito { background: #28a745; }
+.progress-indicator-detailed.consolidamento { background: #fd7e14; }
+.progress-indicator-detailed.emergente { background: #ffc107; }
+.progress-indicator-detailed.avvio { background: #007bff; }
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.enhanced-insights {
+    margin-top: 15px;
+    padding: 15px;
+    background: #e8f4fd;
+    border-radius: 8px;
+    border-left: 4px solid #4facfe;
+}
+
+.insight-item-enhanced {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .objective-header-detailed {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .objective-meta-detailed {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .filter-tabs {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    } 
 }       
     </style>
 </head>
