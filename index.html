@@ -1719,7 +1719,6 @@
     <div style="height: 300px; position: relative;">
         <canvas id="objectivesChart" width="400" height="300"></canvas>
     </div>
-    <!-- AGGIUNTA SEZIONE INSIGHTS -->
     <!-- Insights Migliorati -->
     <div class="enhanced-insights">
         <h5 style="color: #2980b9; margin-bottom: 10px;">💡 Insights Automatici</h5>
@@ -1937,6 +1936,9 @@
     </div>
 
    <script>
+// ========== NUOVA VARIABILE GLOBALE ==========
+let currentDetailedFilter = 'all';
+       
         // Configurazione globale
         const levels = ['Iniziale', 'Base', 'Intermedio', 'Avanzato'];
         const levelColors = {
@@ -1962,6 +1964,10 @@
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
+            setTimeout(() => {
+        renderDetailedObjectivesList();
+        generateEnhancedInsights();
+    }, 100);
         });
         
         function initializeApp() {
@@ -3417,6 +3423,8 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
                 // Non mostra errori all'utente, solo log silenzioso
                 console.log('Sincronizzazione obiettivi non necessaria');
             }
+                renderDetailedObjectivesList();
+                generateEnhancedInsights();
         }
 
         function updateObjectivesSummary(objectives) {
@@ -3677,6 +3685,220 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
             }
         `;
         document.head.appendChild(style);
+
+       // ========== NUOVE FUNZIONI PER LISTA DETTAGLIATA OBIETTIVI ==========
+        
+        // Funzione per renderizzare la lista dettagliata
+        function renderDetailedObjectivesList() {
+            try {
+                const objectives = JSON.parse(localStorage.getItem('pei_objectives') || '[]');
+                const container = document.getElementById('detailedObjectivesList');
+                
+                if (!container) return;
+                
+                const filteredObjectives = currentDetailedFilter === 'all' 
+                    ? objectives 
+                    : objectives.filter(obj => obj.status === currentDetailedFilter);
+
+                if (filteredObjectives.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px 20px; color: #6c757d;">
+                            <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">🎯</div>
+                            <p>Nessun obiettivo trovato per questo filtro</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = filteredObjectives.map(obj => `
+                    <div class="objective-item-detailed status-${obj.status}">
+                        <div class="progress-indicator-detailed ${obj.status}"></div>
+                        <div class="objective-header-detailed">
+                            <div class="objective-title-detailed">${obj.title}</div>
+                            <div class="objective-status-detailed status-${obj.status}">
+                                ${getDetailedStatusLabel(obj.status)}
+                            </div>
+                        </div>
+                        
+                        <div class="objective-meta-detailed">
+                            <div class="meta-item-detailed">
+                                <span style="font-size: 1rem;">📚</span>
+                                <span>${getDetailedAreaLabel(obj.area)}</span>
+                            </div>
+                            <div class="meta-item-detailed">
+                                <span style="font-size: 1rem;">⚡</span>
+                                <span>Priorità ${obj.priority}</span>
+                            </div>
+                            ${obj.deadline ? `
+                            <div class="meta-item-detailed">
+                                <span style="font-size: 1rem;">📅</span>
+                                <span>${formatDetailedDate(obj.deadline)}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${obj.description ? `
+                        <div class="objective-description-detailed">
+                            ${obj.description}
+                        </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.log('Errore rendering lista obiettivi:', error);
+            }
+        }
+
+        // Funzione per filtrare obiettivi
+        function filterDetailedObjectives(status) {
+            currentDetailedFilter = status;
+            
+            // Aggiorna UI filtri
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Trova il tab cliccato e attivalo
+            event.target.classList.add('active');
+            
+            // Re-render lista
+            renderDetailedObjectivesList();
+        }
+
+        // Funzioni helper
+        function getDetailedStatusLabel(status) {
+            const labels = {
+                'acquisito': 'Acquisito',
+                'consolidamento': 'In Consolidamento',
+                'emergente': 'Emergente',
+                'avvio': 'In Avvio'
+            };
+            return labels[status] || status;
+        }
+
+        function getDetailedAreaLabel(area) {
+            const labels = {
+                'cognitiva': 'Area Cognitiva',
+                'comunicativa': 'Area Comunicativa',
+                'sociale': 'Area Sociale',
+                'autonomia': 'Autonomia Personale',
+                'motoria': 'Area Motoria',
+                'sensoriale': 'Area Sensoriale',
+                'socioemotive': 'Socio-Emotive'
+            };
+            return labels[area] || area;
+        }
+
+        function formatDetailedDate(dateString) {
+            return new Date(dateString).toLocaleDateString('it-IT');
+        }
+
+        // Funzione per insights migliorati
+        function generateEnhancedInsights() {
+            try {
+                const objectives = JSON.parse(localStorage.getItem('pei_objectives') || '[]');
+                const container = document.getElementById('enhancedInsights');
+                
+                if (!container || objectives.length === 0) {
+                    if (container) {
+                        container.innerHTML = '<div class="insight-item-enhanced"><span>📊</span><span>Nessun dato disponibile per gli insights</span></div>';
+                    }
+                    return;
+                }
+                
+                const statusCounts = {
+                    acquisito: 0,
+                    consolidamento: 0,
+                    emergente: 0,
+                    avvio: 0
+                };
+                
+                objectives.forEach(obj => {
+                    if (statusCounts.hasOwnProperty(obj.status)) {
+                        statusCounts[obj.status]++;
+                    }
+                });
+                
+                const total = objectives.length;
+                const acquired = statusCounts.acquisito;
+                const insights = [];
+                
+                // Insights basati sui dati reali
+                if (acquired === 0) {
+                    insights.push({
+                        icon: '🎯',
+                        text: 'Nessun obiettivo ancora acquisito - Valutare strategie di supporto personalizzate'
+                    });
+                } else {
+                    const acquiredTitles = objectives
+                        .filter(obj => obj.status === 'acquisito')
+                        .map(obj => obj.title.length > 40 ? obj.title.substring(0, 40) + '...' : obj.title)
+                        .slice(0, 2); // Mostra max 2 titoli
+                    
+                    insights.push({
+                        icon: '🌟',
+                        text: `${acquired} obiettivi acquisiti: ${acquiredTitles.join(', ')}${acquired > 2 ? ' e altri...' : ''}`
+                    });
+                }
+                
+                // Analisi priorità
+                const highPriorityInProgress = objectives.filter(obj => 
+                    obj.priority === 'alta' && obj.status !== 'acquisito'
+                ).length;
+                
+                if (highPriorityInProgress > 0) {
+                    insights.push({
+                        icon: '⚡',
+                        text: `${highPriorityInProgress} obiettivi ad alta priorità necessitano ancora supporto`
+                    });
+                }
+                
+                // Analisi scadenze
+                const nearDeadline = objectives.filter(obj => {
+                    if (!obj.deadline) return false;
+                    const deadline = new Date(obj.deadline);
+                    const now = new Date();
+                    const daysUntil = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+                    return daysUntil <= 30 && daysUntil > 0 && obj.status !== 'acquisito';
+                });
+                
+                if (nearDeadline.length > 0) {
+                    insights.push({
+                        icon: '⏰',
+                        text: `${nearDeadline.length} obiettivi in scadenza nel prossimo mese`
+                    });
+                }
+                
+                // Raccomandazioni
+                const percentage = Math.round((acquired / total) * 100);
+                if (percentage >= 50) {
+                    insights.push({
+                        icon: '✅',
+                        text: 'Progresso solido - Considerare introduzione di obiettivi più sfidanti'
+                    });
+                } else if (percentage > 0) {
+                    insights.push({
+                        icon: '🔄',
+                        text: 'Progresso in corso - Continuare con le strategie attuali'
+                    });
+                } else {
+                    insights.push({
+                        icon: '🚀',
+                        text: 'Fase iniziale - Opportunità per definire strategie didattiche mirate'
+                    });
+                }
+                
+                container.innerHTML = insights.map(insight => `
+                    <div class="insight-item-enhanced">
+                        <span style="font-size: 1.1rem;">${insight.icon}</span>
+                        <span>${insight.text}</span>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.log('Errore generazione insights:', error);
+            }
+        }
         
     </script>
 </body>
