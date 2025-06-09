@@ -906,186 +906,6 @@
     .legend-value {
         font-size: 0.75rem;
     }
-    .objectives-detailed-section {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-}
-
-.filter-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.filter-tab {
-    padding: 8px 16px;
-    border: 2px solid #e9ecef;
-    border-radius: 20px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.filter-tab.active {
-    border-color: #4facfe;
-    background: #4facfe;
-    color: white;
-}
-
-.filter-tab:hover {
-    border-color: #4facfe;
-    transform: translateY(-1px);
-}
-
-.objective-item-detailed {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    border-left: 5px solid #e9ecef;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.objective-item-detailed:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-.objective-item-detailed.status-acquisito {
-    border-left-color: #28a745;
-    background: linear-gradient(90deg, rgba(40, 167, 69, 0.05) 0%, white 100%);
-}
-
-.objective-item-detailed.status-consolidamento {
-    border-left-color: #fd7e14;
-    background: linear-gradient(90deg, rgba(253, 126, 20, 0.05) 0%, white 100%);
-}
-
-.objective-item-detailed.status-emergente {
-    border-left-color: #ffc107;
-    background: linear-gradient(90deg, rgba(255, 193, 7, 0.05) 0%, white 100%);
-}
-
-.objective-item-detailed.status-avvio {
-    border-left-color: #007bff;
-    background: linear-gradient(90deg, rgba(0, 123, 255, 0.05) 0%, white 100%);
-}
-
-.objective-header-detailed {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
-    gap: 15px;
-}
-
-.objective-title-detailed {
-    font-weight: 600;
-    color: #2d3748;
-    font-size: 1rem;
-    line-height: 1.4;
-    flex: 1;
-}
-
-.objective-status-detailed {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-}
-
-.objective-meta-detailed {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-    margin-bottom: 10px;
-    font-size: 0.85rem;
-    color: #6c757d;
-}
-
-.meta-item-detailed {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.objective-description-detailed {
-    color: #495057;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #e9ecef;
-}
-
-.progress-indicator-detailed {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-.progress-indicator-detailed.acquisito { background: #28a745; }
-.progress-indicator-detailed.consolidamento { background: #fd7e14; }
-.progress-indicator-detailed.emergente { background: #ffc107; }
-.progress-indicator-detailed.avvio { background: #007bff; }
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-.enhanced-insights {
-    margin-top: 15px;
-    padding: 15px;
-    background: #e8f4fd;
-    border-radius: 8px;
-    border-left: 4px solid #4facfe;
-}
-
-.insight-item-enhanced {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-    line-height: 1.4;
-}
-
-@media (max-width: 768px) {
-    .objective-header-detailed {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-    .objective-meta-detailed {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    
-    .filter-tabs {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 10px;
-    } 
 }       
     </style>
 </head>
@@ -1499,7 +1319,7 @@
     <div class="objectives-chart">
         <h4>📊 Distribuzione Livelli</h4>
         <div class="chart-container">
-            <canvas id="objectivesTabChart" width="400" height="200"></canvas>
+            <canvas id="objectivesChart" width="400" height="200"></canvas>
         </div>
     </div>
 </div>
@@ -1715,39 +1535,13 @@
     
     <div class="charts-container">
         <div class="chart-card">
-    <h4>🎯 Progressi Obiettivi PEI</h4>
-    <div style="height: 300px; position: relative;">
-        <canvas id="dashboardObjectivesChart" width="400" height="300"></canvas>
-    </div>
-    <!-- Insights Migliorati -->
-    <div class="enhanced-insights">
-        <h5 style="color: #2980b9; margin-bottom: 10px;">💡 Insights Automatici</h5>
-        <div id="enhancedInsights">
-            <!-- Popolato dinamicamente -->
+            <h4>Progressi Obiettivi PEI</h4>
+            <canvas id="objectivesChart" width="400" height="400"></canvas>
         </div>
-    </div>
-</div>
         <div class="chart-card">
             <h4>Distribuzione Livelli</h4>
             <canvas id="levelsChart" width="400" height="400"></canvas>
         </div>
-    </div>
-</div>
-                <div class="objectives-detailed-section">
-    <h4 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">📋 Obiettivi Specifici PEI</h4>
-    
-    <!-- Filtri -->
-    <div class="filter-tabs">
-        <div class="filter-tab active" onclick="filterDetailedObjectives('all')">Tutti</div>
-        <div class="filter-tab" onclick="filterDetailedObjectives('acquisito')">Acquisiti</div>
-        <div class="filter-tab" onclick="filterDetailedObjectives('consolidamento')">In Consol.</div>
-        <div class="filter-tab" onclick="filterDetailedObjectives('emergente')">Emergenti</div>
-        <div class="filter-tab" onclick="filterDetailedObjectives('avvio')">In Avvio</div>
-    </div>
-    
-    <!-- Lista obiettivi -->
-    <div id="detailedObjectivesList" style="max-height: 400px; overflow-y: auto;">
-        <!-- Popolata dinamicamente -->
     </div>
 </div>
 
@@ -1936,9 +1730,6 @@
     </div>
 
    <script>
-// ========== NUOVA VARIABILE GLOBALE ==========
-let currentDetailedFilter = 'all';
-       
         // Configurazione globale
         const levels = ['Iniziale', 'Base', 'Intermedio', 'Avanzato'];
         const levelColors = {
@@ -1964,10 +1755,6 @@ let currentDetailedFilter = 'all';
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
-            setTimeout(() => {
-        renderDetailedObjectivesList();
-        generateEnhancedInsights();
-    }, 100);
         });
         
         function initializeApp() {
@@ -2556,7 +2343,7 @@ let currentDetailedFilter = 'all';
                 }
                 
                 // Objectives Chart
-                const objectivesCtx = document.getElementById('dashboardObjectivesChart');
+                const objectivesCtx = document.getElementById('objectivesChart');
                 if (objectivesCtx && typeof Chart !== 'undefined') {
                     charts.objectives = new Chart(objectivesCtx, {
                         type: 'doughnut',
@@ -3423,8 +3210,6 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
                 // Non mostra errori all'utente, solo log silenzioso
                 console.log('Sincronizzazione obiettivi non necessaria');
             }
-                renderDetailedObjectivesList();
-                generateEnhancedInsights();
         }
 
         function updateObjectivesSummary(objectives) {
@@ -3488,143 +3273,49 @@ Competenze: ${JSON.stringify(calculateCompetenceAverages(), null, 2)}`;
         }
 
         function updateObjectivesChart(objectives) {
-    // Aggiorna il grafico nel TAB OBIETTIVI (Distribuzione Livelli)
-    const tabCanvas = document.getElementById('objectivesTabChart');
-    if (tabCanvas) {
-        updateTabChart(tabCanvas, objectives);
-    }
-    
-    // Aggiorna il grafico nel DASHBOARD (Progressi Obiettivi PEI)
-    const dashboardCanvas = document.getElementById('dashboardObjectivesChart');
-    if (dashboardCanvas) {
-        updateDashboardChart(dashboardCanvas, objectives);
-    }
-}
-
-// Funzione per il grafico del tab obiettivi (grafico a barre)
-function updateTabChart(canvas, objectives) {
-    if (objectives.length === 0) {
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#6c757d';
-        ctx.font = '14px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
-        ctx.font = '11px Arial';
-        ctx.fillText('Aggiungi obiettivi per vedere la distribuzione', canvas.width / 2, canvas.height / 2 + 10);
-        return;
-    }
-    
-    // Calcola le statistiche
-    const statusCounts = {
-        'acquisito': 0,
-        'consolidamento': 0,
-        'emergente': 0,
-        'avvio': 0
-    };
-    
-    objectives.forEach(obj => {
-        if (statusCounts.hasOwnProperty(obj.status)) {
-            statusCounts[obj.status]++;
+            const canvas = document.getElementById('objectivesChart');
+            if (!canvas) return;
+            
+            if (objectives.length === 0) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#6c757d';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
+                ctx.font = '12px Arial';
+                ctx.fillText('Aggiungi obiettivi per vedere il grafico', canvas.width / 2, canvas.height / 2 + 10);
+                return;
+            }
+            
+            // Calcola le statistiche
+            const statusCounts = {
+                'acquisito': 0,
+                'consolidamento': 0,
+                'emergente': 0,
+                'avvio': 0
+            };
+            
+            objectives.forEach(obj => {
+                if (statusCounts.hasOwnProperty(obj.status)) {
+                    statusCounts[obj.status]++;
+                }
+            });
+            
+            const data = [
+                { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
+                { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
+                { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
+                { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
+            ];
+            
+            const activeData = data.filter(d => d.value > 0);
+            
+            if (activeData.length > 0) {
+                drawDonutChart(canvas, activeData, objectives.length);
+            }
         }
-    });
-    
-    const data = [
-        { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
-        { label: 'Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
-        { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
-        { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
-    ];
-    
-    // Disegna grafico a barre
-    drawBarChart(canvas, data);
-}
 
-// Funzione per il grafico del dashboard (grafico a ciambella)
-function updateDashboardChart(canvas, objectives) {
-    if (objectives.length === 0) {
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#6c757d';
-        ctx.font = '16px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
-        ctx.font = '12px Arial';
-        ctx.fillText('Aggiungi obiettivi per vedere il progresso', canvas.width / 2, canvas.height / 2 + 10);
-        return;
-    }
-    
-    // Calcola le statistiche
-    const statusCounts = {
-        'acquisito': 0,
-        'consolidamento': 0,
-        'emergente': 0,
-        'avvio': 0
-    };
-    
-    objectives.forEach(obj => {
-        if (statusCounts.hasOwnProperty(obj.status)) {
-            statusCounts[obj.status]++;
-        }
-    });
-    
-    const data = [
-        { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
-        { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
-        { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
-        { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
-    ];
-    
-    const activeData = data.filter(d => d.value > 0);
-    
-    if (activeData.length > 0) {
-        drawDonutChart(canvas, activeData, objectives.length);
-    }
-}
-
-// Funzione per disegnare grafico a barre (per il tab obiettivi)
-function drawBarChart(canvas, data) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    const padding = 40;
-    const chartWidth = canvas.width - (padding * 2);
-    const chartHeight = canvas.height - (padding * 2);
-    const barWidth = Math.min(60, chartWidth / data.length - 20);
-    const maxValue = Math.max(...data.map(d => d.value), 1);
-    
-    // Posizione iniziale centrata
-    const totalBarsWidth = (barWidth + 20) * data.length - 20;
-    const startX = (canvas.width - totalBarsWidth) / 2;
-    
-    data.forEach((item, index) => {
-        if (item.value === 0) return;
-        
-        const barHeight = (item.value / maxValue) * (chartHeight - 30);
-        const x = startX + (index * (barWidth + 20));
-        const y = padding + (chartHeight - 30) - barHeight;
-        
-        // Disegna barra
-        ctx.fillStyle = item.color;
-        ctx.fillRect(x, y, barWidth, barHeight);
-        
-        // Etichetta valore sopra la barra
-        ctx.fillStyle = '#333';
-        ctx.font = 'bold 14px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(item.value, x + barWidth/2, y - 5);
-        
-        // Etichetta categoria sotto la barra
-        ctx.fillStyle = '#666';
-        ctx.font = '11px Arial';
-        ctx.textAlign = 'center';
-        
-        const words = item.label.split(' ');
-        words.forEach((word, wordIndex) => {
-            ctx.fillText(word, x + barWidth/2, padding + chartHeight - 15 + (wordIndex * 12));
-        });
-    });
-}
         function drawDonutChart(canvas, data, total) {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -3763,127 +3454,7 @@ function drawBarChart(canvas, data) {
             }
         }
 
-                // Funzione per il grafico del tab obiettivi (grafico a barre)
-        function updateTabChart(canvas, objectives) {
-            if (objectives.length === 0) {
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#6c757d';
-                ctx.font = '14px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
-                ctx.font = '11px Arial';
-                ctx.fillText('Aggiungi obiettivi per vedere la distribuzione', canvas.width / 2, canvas.height / 2 + 10);
-                return;
-            }
-            
-            const statusCounts = {
-                'acquisito': 0,
-                'consolidamento': 0,
-                'emergente': 0,
-                'avvio': 0
-            };
-            
-            objectives.forEach(obj => {
-                if (statusCounts.hasOwnProperty(obj.status)) {
-                    statusCounts[obj.status]++;
-                }
-            });
-            
-            const data = [
-                { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
-                { label: 'Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
-                { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
-                { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
-            ];
-            
-            drawBarChart(canvas, data);
-        }
-
-        // Funzione per il grafico del dashboard
-        function updateDashboardChart(canvas, objectives) {
-            if (objectives.length === 0) {
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#6c757d';
-                ctx.font = '16px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Nessun obiettivo definito', canvas.width / 2, canvas.height / 2 - 10);
-                ctx.font = '12px Arial';
-                ctx.fillText('Aggiungi obiettivi per vedere il progresso', canvas.width / 2, canvas.height / 2 + 10);
-                return;
-            }
-            
-            const statusCounts = {
-                'acquisito': 0,
-                'consolidamento': 0,
-                'emergente': 0,
-                'avvio': 0
-            };
-            
-            objectives.forEach(obj => {
-                if (statusCounts.hasOwnProperty(obj.status)) {
-                    statusCounts[obj.status]++;
-                }
-            });
-            
-            const data = [
-                { label: 'Acquisito', value: statusCounts.acquisito, color: '#28a745' },
-                { label: 'In Consolidamento', value: statusCounts.consolidamento, color: '#ffc107' },
-                { label: 'Emergente', value: statusCounts.emergente, color: '#fd7e14' },
-                { label: 'In Avvio', value: statusCounts.avvio, color: '#007bff' }
-            ];
-            
-            const activeData = data.filter(d => d.value > 0);
-            
-            if (activeData.length > 0) {
-                drawDonutChart(canvas, activeData, objectives.length);
-            }
-        }
-
-        // Funzione per disegnare grafico a barre
-        function drawBarChart(canvas, data) {
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const padding = 40;
-            const chartWidth = canvas.width - (padding * 2);
-            const chartHeight = canvas.height - (padding * 2);
-            const barWidth = Math.min(60, chartWidth / data.length - 20);
-            const maxValue = Math.max(...data.map(d => d.value), 1);
-            
-            const totalBarsWidth = (barWidth + 20) * data.length - 20;
-            const startX = (canvas.width - totalBarsWidth) / 2;
-            
-            data.forEach((item, index) => {
-                if (item.value === 0) return;
-                
-                const barHeight = (item.value / maxValue) * (chartHeight - 30);
-                const x = startX + (index * (barWidth + 20));
-                const y = padding + (chartHeight - 30) - barHeight;
-                
-                ctx.fillStyle = item.color;
-                ctx.fillRect(x, y, barWidth, barHeight);
-                
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 14px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(item.value, x + barWidth/2, y - 5);
-                
-                ctx.fillStyle = '#666';
-                ctx.font = '11px Arial';
-                ctx.textAlign = 'center';
-                
-                const words = item.label.split(' ');
-                words.forEach((word, wordIndex) => {
-                    ctx.fillText(word, x + barWidth/2, padding + chartHeight - 15 + (wordIndex * 12));
-                });
-            });
-        }
-        
-        // ========== FINE NUOVE FUNZIONI ==========
-
-        // Aggiungi CSS per le animazioni (questo c'è già nel tuo file)
+        // Aggiungi CSS per le animazioni
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
@@ -3899,219 +3470,6 @@ function drawBarChart(canvas, data) {
             }
         `;
         document.head.appendChild(style);
-       // ========== NUOVE FUNZIONI PER LISTA DETTAGLIATA OBIETTIVI ==========
-        
-        // Funzione per renderizzare la lista dettagliata
-        function renderDetailedObjectivesList() {
-            try {
-                const objectives = JSON.parse(localStorage.getItem('pei_objectives') || '[]');
-                const container = document.getElementById('detailedObjectivesList');
-                
-                if (!container) return;
-                
-                const filteredObjectives = currentDetailedFilter === 'all' 
-                    ? objectives 
-                    : objectives.filter(obj => obj.status === currentDetailedFilter);
-
-                if (filteredObjectives.length === 0) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 40px 20px; color: #6c757d;">
-                            <div style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;">🎯</div>
-                            <p>Nessun obiettivo trovato per questo filtro</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = filteredObjectives.map(obj => `
-                    <div class="objective-item-detailed status-${obj.status}">
-                        <div class="progress-indicator-detailed ${obj.status}"></div>
-                        <div class="objective-header-detailed">
-                            <div class="objective-title-detailed">${obj.title}</div>
-                            <div class="objective-status-detailed status-${obj.status}">
-                                ${getDetailedStatusLabel(obj.status)}
-                            </div>
-                        </div>
-                        
-                        <div class="objective-meta-detailed">
-                            <div class="meta-item-detailed">
-                                <span style="font-size: 1rem;">📚</span>
-                                <span>${getDetailedAreaLabel(obj.area)}</span>
-                            </div>
-                            <div class="meta-item-detailed">
-                                <span style="font-size: 1rem;">⚡</span>
-                                <span>Priorità ${obj.priority}</span>
-                            </div>
-                            ${obj.deadline ? `
-                            <div class="meta-item-detailed">
-                                <span style="font-size: 1rem;">📅</span>
-                                <span>${formatDetailedDate(obj.deadline)}</span>
-                            </div>
-                            ` : ''}
-                        </div>
-                        
-                        ${obj.description ? `
-                        <div class="objective-description-detailed">
-                            ${obj.description}
-                        </div>
-                        ` : ''}
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.log('Errore rendering lista obiettivi:', error);
-            }
-        }
-
-        // Funzione per filtrare obiettivi
-        function filterDetailedObjectives(status) {
-            currentDetailedFilter = status;
-            
-            // Aggiorna UI filtri
-            document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Trova il tab cliccato e attivalo
-            event.target.classList.add('active');
-            
-            // Re-render lista
-            renderDetailedObjectivesList();
-        }
-
-        // Funzioni helper
-        function getDetailedStatusLabel(status) {
-            const labels = {
-                'acquisito': 'Acquisito',
-                'consolidamento': 'In Consolidamento',
-                'emergente': 'Emergente',
-                'avvio': 'In Avvio'
-            };
-            return labels[status] || status;
-        }
-
-        function getDetailedAreaLabel(area) {
-            const labels = {
-                'cognitiva': 'Area Cognitiva',
-                'comunicativa': 'Area Comunicativa',
-                'sociale': 'Area Sociale',
-                'autonomia': 'Autonomia Personale',
-                'motoria': 'Area Motoria',
-                'sensoriale': 'Area Sensoriale',
-                'socioemotive': 'Socio-Emotive'
-            };
-            return labels[area] || area;
-        }
-
-        function formatDetailedDate(dateString) {
-            return new Date(dateString).toLocaleDateString('it-IT');
-        }
-
-        // Funzione per insights migliorati
-        function generateEnhancedInsights() {
-            try {
-                const objectives = JSON.parse(localStorage.getItem('pei_objectives') || '[]');
-                const container = document.getElementById('enhancedInsights');
-                
-                if (!container || objectives.length === 0) {
-                    if (container) {
-                        container.innerHTML = '<div class="insight-item-enhanced"><span>📊</span><span>Nessun dato disponibile per gli insights</span></div>';
-                    }
-                    return;
-                }
-                
-                const statusCounts = {
-                    acquisito: 0,
-                    consolidamento: 0,
-                    emergente: 0,
-                    avvio: 0
-                };
-                
-                objectives.forEach(obj => {
-                    if (statusCounts.hasOwnProperty(obj.status)) {
-                        statusCounts[obj.status]++;
-                    }
-                });
-                
-                const total = objectives.length;
-                const acquired = statusCounts.acquisito;
-                const insights = [];
-                
-                // Insights basati sui dati reali
-                if (acquired === 0) {
-                    insights.push({
-                        icon: '🎯',
-                        text: 'Nessun obiettivo ancora acquisito - Valutare strategie di supporto personalizzate'
-                    });
-                } else {
-                    const acquiredTitles = objectives
-                        .filter(obj => obj.status === 'acquisito')
-                        .map(obj => obj.title.length > 40 ? obj.title.substring(0, 40) + '...' : obj.title)
-                        .slice(0, 2); // Mostra max 2 titoli
-                    
-                    insights.push({
-                        icon: '🌟',
-                        text: `${acquired} obiettivi acquisiti: ${acquiredTitles.join(', ')}${acquired > 2 ? ' e altri...' : ''}`
-                    });
-                }
-                
-                // Analisi priorità
-                const highPriorityInProgress = objectives.filter(obj => 
-                    obj.priority === 'alta' && obj.status !== 'acquisito'
-                ).length;
-                
-                if (highPriorityInProgress > 0) {
-                    insights.push({
-                        icon: '⚡',
-                        text: `${highPriorityInProgress} obiettivi ad alta priorità necessitano ancora supporto`
-                    });
-                }
-                
-                // Analisi scadenze
-                const nearDeadline = objectives.filter(obj => {
-                    if (!obj.deadline) return false;
-                    const deadline = new Date(obj.deadline);
-                    const now = new Date();
-                    const daysUntil = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
-                    return daysUntil <= 30 && daysUntil > 0 && obj.status !== 'acquisito';
-                });
-                
-                if (nearDeadline.length > 0) {
-                    insights.push({
-                        icon: '⏰',
-                        text: `${nearDeadline.length} obiettivi in scadenza nel prossimo mese`
-                    });
-                }
-                
-                // Raccomandazioni
-                const percentage = Math.round((acquired / total) * 100);
-                if (percentage >= 50) {
-                    insights.push({
-                        icon: '✅',
-                        text: 'Progresso solido - Considerare introduzione di obiettivi più sfidanti'
-                    });
-                } else if (percentage > 0) {
-                    insights.push({
-                        icon: '🔄',
-                        text: 'Progresso in corso - Continuare con le strategie attuali'
-                    });
-                } else {
-                    insights.push({
-                        icon: '🚀',
-                        text: 'Fase iniziale - Opportunità per definire strategie didattiche mirate'
-                    });
-                }
-                
-                container.innerHTML = insights.map(insight => `
-                    <div class="insight-item-enhanced">
-                        <span style="font-size: 1.1rem;">${insight.icon}</span>
-                        <span>${insight.text}</span>
-                    </div>
-                `).join('');
-                
-            } catch (error) {
-                console.log('Errore generazione insights:', error);
-            }
-        }
         
     </script>
 </body>
